@@ -72,7 +72,7 @@
           <span dir="ltr">0992668807</span>
         </a>
         <span class="text-slate-600">|</span>
-        <span class="text-neonGreen font-bold flex items-center gap-1">
+        <span id="syncIndicatorTop" class="text-neonGreen font-bold flex items-center gap-1">
           <i class="fa-solid fa-coins text-[10px]"></i>
           <span>التسعير بالليرة السورية (ل.س)</span>
         </span>
@@ -201,7 +201,7 @@
             <input type="checkbox" id="stockOnlyCheckbox" onchange="toggleStockFilter(this.checked)" class="rounded bg-cardBg border-slate-700 text-neonGreen">
             <span>عرض القطع المتوفرة حالياً في المحل فقط</span>
           </label>
-          <span class="text-neonGreen/90 font-semibold">جميع الأسعار بالليرة السورية</span>
+          <span id="cloudStatusBadge" class="text-neonGreen/90 font-semibold">جميع الأسعار بالليرة السورية</span>
         </div>
       </section>
 
@@ -231,7 +231,7 @@
             لوحة الإدارة والتسعير - Techno E Servis
           </div>
           <h2 class="text-xl sm:text-2xl font-black text-white">إدارة الأصناف والصور والأسعار بالليرة السورية</h2>
-          <p class="text-xs text-slate-400 mt-0.5">أضف أصنافاً جديدة (لمبات، وصلات...) والتقط صوراً مباشرة من كاميرا الموبايل.</p>
+          <p class="text-xs text-slate-400 mt-0.5">أضف أصنافاً جديدة وحدد الأسعار بحرية كاملة، وتتم المزامنة تلقائياً مع الزبائن.</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
@@ -246,6 +246,35 @@
         </div>
       </div>
 
+      <!-- CLOUD SYNC BOX -->
+      <div class="bg-gradient-to-br from-slate-900 to-cardBg border border-neonGreen/40 p-4 sm:p-5 rounded-2xl space-y-3 shadow-lg">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+          <div>
+            <h3 class="text-sm font-black text-neonGreen flex items-center gap-2">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <span>المزامنة السحابية الفورية للزبائن (Firebase Sync)</span>
+            </h3>
+            <p class="text-[11px] text-slate-300 mt-0.5">متجر Techno E مربوط بقاعدة البيانات السحابية؛ أي تعديل يتم حفظه ومشاركته فوراً.</p>
+          </div>
+          <span id="adminSyncStatusPill" class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-neonGreen/15 text-neonGreen border border-neonGreen/40">
+            متصل بالسحابة ✓
+          </span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input 
+            type="url" 
+            id="firebaseUrlInput" 
+            dir="ltr"
+            value="https://techno-e-default-rtdb.firebaseio.com"
+            class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-neonLime font-mono focus:outline-none focus:border-neonGreen"
+          />
+          <button onclick="saveAndConnectCloud()" class="px-4 py-2 bg-neonGreen hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-xs whitespace-nowrap flex items-center justify-center gap-1.5 shadow">
+            <i class="fa-solid fa-rotate"></i>
+            <span>مزامنة فورية الآن</span>
+          </button>
+        </div>
+      </div>
       <!-- Dynamic Category Manager Box -->
       <div class="bg-cardBg border border-slate-800 p-4 sm:p-5 rounded-2xl space-y-3">
         <div class="flex items-center justify-between">
@@ -302,14 +331,14 @@
               <i class="fa-solid fa-truck-fast text-neonGreen"></i>
               <span>إدارة مناطق وأجور التوصيل والشحن (ل.س)</span>
             </h3>
-            <p class="text-[11px] text-slate-400 mt-0.5">أضف مناطق جديدة أو عدّل أسعار التوصيل مباشرة</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">أضف مناطق جديدة أو عدّل أسعار التوصيل بحرية كاملة</p>
           </div>
         </div>
 
         <!-- Add New Delivery Zone Form -->
         <div class="flex flex-col sm:flex-row gap-2">
           <input type="text" id="newZoneNameInput" placeholder="اسم المنطقة (مثال: قدسيا، صحنايا، جرمانا...)" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-neonGreen">
-          <input type="number" step="1000" id="newZoneFeeInput" placeholder="أجرة التوصيل (ل.س)" class="w-full sm:w-40 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-neonGreen font-bold focus:outline-none focus:border-neonGreen" onkeydown="if(event.key==='Enter'){ event.preventDefault(); addDeliveryZone(); }">
+          <input type="number" step="any" inputmode="decimal" id="newZoneFeeInput" placeholder="أجرة التوصيل (أي رقم)" class="w-full sm:w-44 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-neonGreen font-bold focus:outline-none focus:border-neonGreen" onkeydown="if(event.key==='Enter'){ event.preventDefault(); addDeliveryZone(); }">
           <button onclick="addDeliveryZone()" class="px-4 py-2 bg-neonGreen hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-xs whitespace-nowrap flex items-center justify-center gap-1.5 shadow">
             <i class="fa-solid fa-plus"></i>
             <span>إضافة منطقة</span>
@@ -326,7 +355,7 @@
       <div class="bg-cardBg border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
         <div class="p-4 border-b border-slate-800 flex items-center justify-between">
           <h3 class="text-sm font-black text-white">قائمة المنتجات والأسعار (ل.س)</h3>
-          <span class="text-xs text-slate-400">عدّل السعر بالليرة السورية مباشرة</span>
+          <span class="text-xs text-slate-400">اكتب أي سعر تريده مباشرة</span>
         </div>
 
         <div class="overflow-x-auto">
@@ -521,7 +550,7 @@
           </div>
         </div>
 
-        <!-- Category & Price SYP -->
+        <!-- Category & Price SYP (ANY NUMBER ALLOWED) -->
         <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="block text-slate-300 font-semibold mb-1">الصنف / القسم *</label>
@@ -530,11 +559,10 @@
             </select>
           </div>
           <div>
-            <label class="block text-neonGreen font-semibold mb-1">السعر بالليرة السورية (ل.س) *</label>
-            <input type="number" step="500" id="pPriceSYP" required placeholder="مثال: 45000" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold">
+            <label class="block text-neonGreen font-semibold mb-1">السعر بالليرة السورية (أي رقم) *</label>
+            <input type="number" step="any" inputmode="decimal" id="pPriceSYP" required placeholder="اكتب أي رقم (مثلاً 47250)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold">
           </div>
         </div>
-
         <!-- CAMERA DIRECT CAPTURE + GALLERY UPLOAD -->
         <div class="p-3 bg-slate-950/90 rounded-2xl border border-slate-800 space-y-2.5">
           <label class="block text-neonGreen font-bold text-[11px]">
@@ -697,6 +725,8 @@
 
   <!-- ================= JAVASCRIPT APPLICATION LOGIC ================= -->
   <script>
+    const HARDCODED_FIREBASE_URL = "https://techno-e-default-rtdb.firebaseio.com";
+
     const DEFAULT_CATEGORIES = [
       "إنفرترات",
       "بطاريات",
@@ -814,16 +844,17 @@
       }
     ];
 
+    const DEFAULT_DELIVERY_ZONES = [
+      { id: "z_damascus", name: "توصيل داخل دمشق", fee: 35000 },
+      { id: "z_gov", name: "شحن للمحافظات بولمان", fee: 90000 }
+    ];
+
+    let firebaseDbUrl = HARDCODED_FIREBASE_URL || localStorage.getItem('tekno_syp_fb_url') || "";
     let categories = JSON.parse(localStorage.getItem('tekno_syp_cats')) || DEFAULT_CATEGORIES;
     let products = JSON.parse(localStorage.getItem('tekno_syp_prods')) || DEFAULT_PRODUCTS;
     let shopPhone = localStorage.getItem('tekno_syp_phone') || "963992668807";
     let adminPin = localStorage.getItem('tekno_syp_pin') || "7788";
     let cart = JSON.parse(localStorage.getItem('tekno_syp_cart')) || [];
-    
-    const DEFAULT_DELIVERY_ZONES = [
-      { id: "z_damascus", name: "توصيل داخل دمشق", fee: 35000 },
-      { id: "z_gov", name: "شحن للمحافظات بولمان", fee: 90000 }
-    ];
     let deliveryZones = JSON.parse(localStorage.getItem('tekno_syp_zones')) || DEFAULT_DELIVERY_ZONES;
 
     let activeCategory = "all";
@@ -832,10 +863,109 @@
     let isAdminLoggedIn = false;
 
     function formatSYP(amount) {
-      return Math.round(amount).toLocaleString('en-US') + " ل.س";
+      const num = Number(amount);
+      if (isNaN(num)) return "0 ل.س";
+      return num.toLocaleString('en-US', { maximumFractionDigits: 2 }) + " ل.س";
     }
 
-    function saveStorage() {
+    function normalizeFirebaseUrl(url) {
+      if (!url) return "";
+      let clean = url.trim().replace(/\/+$/, "");
+      if (!clean.startsWith("http")) clean = "https://" + clean;
+      return clean;
+    }
+
+    function updateSyncUI(connected, statusText = "") {
+      const pill = document.getElementById('adminSyncStatusPill');
+      const badge = document.getElementById('cloudStatusBadge');
+      if (connected) {
+        if (pill) {
+          pill.textContent = statusText || "متصل بالسحابة ومزامن ✓";
+          pill.className = "px-2.5 py-1 rounded-full text-[11px] font-bold bg-neonGreen/15 text-neonGreen border border-neonGreen/40";
+        }
+        if (badge) {
+          badge.innerHTML = `<i class="fa-solid fa-cloud-check ml-1"></i> الأسعار محدثة لحظياً (ل.س)`;
+        }
+      } else {
+        if (pill) {
+          pill.textContent = statusText || "وضع محلي (أدخل رابط Firebase للمزامنة)";
+          pill.className = "px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30";
+        }
+      }
+    }
+
+    async function pullFromCloud() {
+      const cleanUrl = normalizeFirebaseUrl(firebaseDbUrl);
+      if (!cleanUrl) return;
+      try {
+        const res = await fetch(`${cleanUrl}/techno_store_data.json`);
+        if (!res.ok) throw new Error("Network error");
+        const data = await res.json();
+        if (data) {
+          if (Array.isArray(data.categories) && data.categories.length > 0) categories = data.categories;
+          if (Array.isArray(data.products)) products = data.products;
+          if (Array.isArray(data.deliveryZones)) deliveryZones = data.deliveryZones;
+          if (data.shopPhone) shopPhone = data.shopPhone;
+          if (data.adminPin) adminPin = data.adminPin;
+
+          saveLocalOnly();
+          renderAdminDeliveryZones();
+          renderDeliverySelect();
+          renderCategoryTabs();
+          renderStore();
+          if (isAdminLoggedIn) {
+            renderAdminCategoriesList();
+            renderAdminTable();
+          }
+          updateSyncUI(true);
+        } else {
+          await pushToCloud();
+        }
+      } catch (err) {
+        updateSyncUI(false, "تعذر الاتصال بالسحابة - تأكد من صلاحيات Rules");
+      }
+    }
+
+    async function pushToCloud() {
+      const cleanUrl = normalizeFirebaseUrl(firebaseDbUrl);
+      if (!cleanUrl) return;
+      updateSyncUI(true, "جاري المزامنة...");
+      try {
+        const payload = {
+          categories,
+          products,
+          deliveryZones,
+          shopPhone,
+          adminPin,
+          updatedAt: Date.now()
+        };
+        const res = await fetch(`${cleanUrl}/techno_store_data.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error("Save failed");
+        updateSyncUI(true, "تمت المزامنة للزبائن ✓");
+      } catch (err) {
+        updateSyncUI(false, "فشل رفع التعديلات للسحابة");
+        showToast("خطأ في المزامنة: تأكد من تفعيل صلاحيات القراءة والكتابة في Firebase", "error");
+      }
+    }
+
+    async function saveAndConnectCloud() {
+      const inputVal = document.getElementById('firebaseUrlInput').value.trim();
+      const clean = normalizeFirebaseUrl(inputVal);
+      if (!clean || (!clean.includes("firebaseio.com") && !clean.includes("firebasedatabase.app"))) {
+        showToast("يرجى إدخال رابط Firebase Realtime Database صحيح", "error");
+        return;
+      }
+      firebaseDbUrl = clean;
+      localStorage.setItem('tekno_syp_fb_url', firebaseDbUrl);
+      await pushToCloud();
+      showToast("تم ربط المتجر بالسحابة ومزامنة جميع الأسعار والصور!", "success");
+    }
+
+    function saveLocalOnly() {
       try {
         localStorage.setItem('tekno_syp_cats', JSON.stringify(categories));
         localStorage.setItem('tekno_syp_prods', JSON.stringify(products));
@@ -844,17 +974,31 @@
         localStorage.setItem('tekno_syp_cart', JSON.stringify(cart));
         localStorage.setItem('tekno_syp_zones', JSON.stringify(deliveryZones));
       } catch (e) {
-        showToast("تنبيه: مساحة التخزين ممتلئة، حاول حذف بعض الصور القديمة", "error");
+        showToast("تنبيه: مساحة التخزين المحلية ممتلئة", "error");
       }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+    function saveStorage() {
+      saveLocalOnly();
+      if (firebaseDbUrl) {
+        pushToCloud();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('adminPhoneInput').value = shopPhone;
+      if (firebaseDbUrl) {
+        document.getElementById('firebaseUrlInput').value = firebaseDbUrl;
+      }
       renderAdminDeliveryZones();
       renderDeliverySelect();
       renderCategoryTabs();
       renderStore();
       updateCartBadge();
+
+      if (firebaseDbUrl) {
+        await pullFromCloud();
+      }
     });
 
     function renderAdminDeliveryZones() {
@@ -867,925 +1011,8 @@
             <div class="flex items-center gap-1">
               <input 
                 type="number" 
-                step="1000" 
+                step="any" 
+                inputmode="decimal"
                 value="${z.fee}" 
                 onchange="updateZoneFee('${z.id}', this.value)" 
-                class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs text-neonGreen font-bold focus:outline-none focus:border-neonGreen"
-              />
-              <span class="text-[10px] text-slate-400">ل.س</span>
-            </div>
-          </div>
-          <button onclick="deleteDeliveryZone('${z.id}')" class="p-2 bg-slate-800 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors" title="حذف المنطقة">
-            <i class="fa-solid fa-trash"></i>
-          </button>
-        </div>
-      `).join('');
-    }
-
-    function addDeliveryZone() {
-      const nameInput = document.getElementById('newZoneNameInput');
-      const feeInput = document.getElementById('newZoneFeeInput');
-      const name = nameInput.value.trim();
-      const fee = parseFloat(feeInput.value);
-
-      if (!name) {
-        showToast("يرجى إدخال اسم المنطقة", "error");
-        return;
-      }
-      if (isNaN(fee) || fee < 0) {
-        showToast("يرجى إدخال أجرة توصيل صحيحة", "error");
-        return;
-      }
-
-      deliveryZones.push({
-        id: "z_" + Date.now(),
-        name: name,
-        fee: fee
-      });
-
-      nameInput.value = "";
-      feeInput.value = "";
-      saveStorage();
-      renderAdminDeliveryZones();
-      renderDeliverySelect();
-      showToast(`تمت إضافة منطقة "${name}" بنجاح`, "success");
-    }
-
-    function updateZoneFee(id, val) {
-      const fee = parseFloat(val);
-      if (isNaN(fee) || fee < 0) {
-        showToast("يرجى إدخال رقم صحيح", "error");
-        return;
-      }
-      const zone = deliveryZones.find(z => z.id === id);
-      if (zone) {
-        zone.fee = fee;
-        saveStorage();
-        renderDeliverySelect();
-        renderCartTotals();
-        showToast(`تم تعديل أجرة "${zone.name}" إلى ${formatSYP(fee)}`, "success");
-      }
-    }
-
-    function deleteDeliveryZone(id) {
-      deliveryZones = deliveryZones.filter(z => z.id !== id);
-      saveStorage();
-      renderAdminDeliveryZones();
-      renderDeliverySelect();
-      renderCartTotals();
-      showToast("تم حذف المنطقة");
-    }
-
-    function renderDeliverySelect() {
-      const sel = document.getElementById('custZone');
-      if (!sel) return;
-      const currentVal = sel.value;
-      
-      let optionsHtml = `<option value="0">استلام مباشر من المحل بالمزة (مجاناً)</option>`;
-      optionsHtml += deliveryZones.map(z => 
-        `<option value="${z.fee}">${z.name} (${formatSYP(z.fee)})</option>`
-      ).join('');
-      
-      sel.innerHTML = optionsHtml;
-      
-      const validFees = ["0", ...deliveryZones.map(z => String(z.fee))];
-      if (validFees.includes(currentVal)) {
-        sel.value = currentVal;
-      } else {
-        sel.value = "0";
-      }
-    }
-
-    /* Dynamic Categories Rendering */
-    function renderCategoryTabs() {
-      const container = document.getElementById('categoryTabsContainer');
-      let html = `
-        <button onclick="filterCategory('all')" class="cat-pill px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${activeCategory === 'all' ? 'bg-neonGreen text-slate-950 shadow' : 'bg-cardBg text-slate-300 border border-slate-800 hover:bg-slate-800'}">
-          الكل (${products.length})
-        </button>
-      `;
-
-      categories.forEach(cat => {
-        const count = products.filter(p => p.category === cat).length;
-        const isActive = activeCategory === cat;
-        html += `
-          <button onclick="filterCategory('${cat}')" class="cat-pill px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${isActive ? 'bg-neonGreen text-slate-950 shadow' : 'bg-cardBg text-slate-300 border border-slate-800 hover:bg-slate-800'}">
-            ${cat} <span class="opacity-75 text-[10px]">(${count})</span>
-          </button>
-        `;
-      });
-
-      container.innerHTML = html;
-    }
-
-    function filterCategory(cat) {
-      activeCategory = cat;
-      renderCategoryTabs();
-      renderStore();
-    }
-
-    /* Store Rendering */
-    function renderStore() {
-      const grid = document.getElementById('productsGrid');
-      const noFound = document.getElementById('noProductsFound');
-
-      const filtered = products.filter(p => {
-        const catMatch = activeCategory === 'all' || p.category === activeCategory;
-        const searchMatch = p.name.toLowerCase().includes(searchQuery) ||
-                            (p.brand && p.brand.toLowerCase().includes(searchQuery)) ||
-                            (p.category && p.category.toLowerCase().includes(searchQuery)) ||
-                            (p.description && p.description.toLowerCase().includes(searchQuery));
-        const stockMatch = !onlyInStock || p.inStock;
-        return catMatch && searchMatch && stockMatch;
-      });
-
-      if (filtered.length === 0) {
-        grid.innerHTML = "";
-        noFound.classList.remove('hidden');
-        return;
-      }
-      noFound.classList.add('hidden');
-
-      grid.innerHTML = filtered.map(prod => {
-        const hasCustomImg = prod.image && prod.image.trim().length > 0;
-        const formattedPrice = formatSYP(prod.priceSYP);
-
-        return `
-          <div class="bg-cardBg border border-slate-800 hover:border-slate-700 rounded-3xl p-4 flex flex-col justify-between transition-all duration-200">
-            <div>
-              <!-- Top Badges: Category + Brand -->
-              <div class="flex items-center justify-between gap-1.5 mb-2.5 flex-wrap">
-                <div class="flex items-center gap-1.5">
-                  <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-800">${prod.category}</span>
-                  ${prod.brand ? `
-                    <span class="text-[10px] font-black px-2 py-0.5 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center gap-1">
-                      <i class="fa-solid fa-tag text-[9px]"></i>
-                      ${prod.brand}
-                    </span>
-                  ` : ''}
-                </div>
-
-                ${prod.inStock ? `
-                  <span class="text-[10px] font-black text-neonGreen bg-neonGreen/10 border border-neonGreen/30 px-2 py-0.5 rounded-full flex items-center gap-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-neonGreen animate-pulse"></span>
-                    متوفر
-                  </span>
-                ` : `
-                  <span class="text-[10px] font-bold text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-full">
-                    غير متوفر
-                  </span>
-                `}
-              </div>
-
-              <!-- Image Container -->
-              <div class="h-44 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 flex items-center justify-center relative overflow-hidden mb-3">
-                ${hasCustomImg ? `
-                  <img src="${prod.image}" alt="${prod.name}" class="w-full h-full object-contain p-1.5 rounded-2xl" />
-                ` : `
-                  <i class="fa-solid ${prod.icon || 'fa-bolt'} text-4xl text-neonGreen"></i>
-                `}
-                <span class="absolute bottom-1.5 left-2 text-[8px] font-tech text-slate-400 bg-black/70 px-1.5 py-0.5 rounded tracking-wider">TECHNO E</span>
-              </div>
-
-              <h3 class="text-sm font-black text-white leading-snug">${prod.name}</h3>
-              <p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${prod.description || 'معدات أصلية مفحوصة ومكفولة داخل مركزنا.'}</p>
-
-              <!-- Technical Specs -->
-              <div class="mt-3 rounded-xl bg-slate-900/90 border border-slate-800/80 p-2.5 space-y-1.5 text-[11px]">
-                ${prod.brand ? `
-                <div class="flex justify-between border-b border-slate-800/60 pb-1">
-                  <span class="text-slate-400">🏭 الشركة / الماركة:</span>
-                  <span class="font-bold text-amber-300">${prod.brand}</span>
-                </div>` : ''}
-                ${prod.voltage ? `
-                <div class="flex justify-between border-b border-slate-800/60 pb-1">
-                  <span class="text-slate-400">⚡ الجهد / الدخل:</span>
-                  <span class="font-bold text-white">${prod.voltage}</span>
-                </div>` : ''}
-                ${prod.power ? `
-                <div class="flex justify-between border-b border-slate-800/60 pb-1">
-                  <span class="text-slate-400">📊 الاستطاعة / القياس:</span>
-                  <span class="font-bold text-white">${prod.power}</span>
-                </div>` : ''}
-                ${prod.warranty ? `
-                <div class="flex justify-between pt-0.5">
-                  <span class="text-slate-400">🛡️ الضمان:</span>
-                  <span class="font-bold text-neonGreen">${prod.warranty}</span>
-                </div>` : ''}
-              </div>
-            </div>
-
-            <!-- Price (SYP ONLY) & Add Button -->
-            <div class="pt-3 mt-3 border-t border-slate-800">
-              <div class="flex items-center justify-between mb-2.5">
-                <div class="text-lg font-black text-neonGreen">
-                  ${formattedPrice}
-                </div>
-                <span class="text-[10px] text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">السعر النهائي</span>
-              </div>
-
-              ${prod.inStock ? `
-                <button onclick="addToCart('${prod.id}')" class="w-full py-2.5 rounded-xl bg-neonGreen hover:bg-emerald-400 active:scale-95 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-md">
-                  <i class="fa-solid fa-cart-plus"></i>
-                  <span>إضافة إلى السلة</span>
-                </button>
-              ` : `
-                <button disabled class="w-full py-2.5 rounded-xl bg-slate-900 text-slate-500 font-bold text-xs border border-slate-800 cursor-not-allowed">
-                  القطعة غير متوفرة حالياً
-                </button>
-              `}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function handleSearch(val) {
-      searchQuery = val.trim().toLowerCase();
-      renderStore();
-    }
-
-    function toggleStockFilter(val) {
-      onlyInStock = val;
-      renderStore();
-    }
-
-    /* Cart Operations (SYP ONLY) */
-    function addToCart(id) {
-      const prod = products.find(p => p.id === id);
-      if (!prod || !prod.inStock) return;
-
-      const item = cart.find(i => i.id === id);
-      if (item) {
-        item.qty += 1;
-      } else {
-        cart.push({ id: prod.id, name: prod.name, brand: prod.brand || '', priceSYP: prod.priceSYP, qty: 1 });
-      }
-      saveStorage();
-      updateCartBadge();
-      showToast(`تمت إضافة "${prod.name}" للسلة`, "success");
-    }
-
-    function updateCartBadge() {
-      const count = cart.reduce((sum, i) => sum + i.qty, 0);
-      document.getElementById('cartCountBadge').textContent = count;
-    }
-
-    function openCart() {
-      renderDeliverySelect();
-      renderCartDrawer();
-      document.getElementById('cartBackdrop').classList.remove('hidden');
-      document.getElementById('cartDrawer').classList.remove('-translate-x-full');
-    }
-
-    function closeCart() {
-      document.getElementById('cartDrawer').classList.add('-translate-x-full');
-      setTimeout(() => {
-        document.getElementById('cartBackdrop').classList.add('hidden');
-      }, 250);
-    }
-
-    function changeCartQty(id, delta) {
-      const item = cart.find(i => i.id === id);
-      if (!item) return;
-      item.qty += delta;
-      if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
-      saveStorage();
-      updateCartBadge();
-      renderCartDrawer();
-    }
-
-    function renderCartDrawer() {
-      const container = document.getElementById('cartItemsContainer');
-      const empty = document.getElementById('emptyCartNotice');
-      const form = document.getElementById('cartForm');
-      const footer = document.getElementById('cartFooter');
-
-      if (cart.length === 0) {
-        container.innerHTML = "";
-        empty.classList.remove('hidden');
-        form.classList.add('hidden');
-        footer.classList.add('hidden');
-        return;
-      }
-
-      empty.classList.add('hidden');
-      form.classList.remove('hidden');
-      footer.classList.remove('hidden');
-
-      container.innerHTML = cart.map(i => `
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between text-xs">
-          <div class="flex-1 min-w-0">
-            <div class="font-bold text-white truncate">${i.name}</div>
-            ${i.brand ? `<div class="text-[10px] text-amber-400">الشركة: ${i.brand}</div>` : ''}
-            <div class="text-[11px] text-neonGreen font-semibold mt-0.5">${formatSYP(i.priceSYP)} × ${i.qty} = ${formatSYP(i.priceSYP * i.qty)}</div>
-          </div>
-          <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800 mr-2">
-            <button onclick="changeCartQty('${i.id}', -1)" class="w-5 h-5 bg-slate-800 rounded flex items-center justify-center font-bold">-</button>
-            <span class="w-4 text-center font-bold text-white">${i.qty}</span>
-            <button onclick="changeCartQty('${i.id}', 1)" class="w-5 h-5 bg-slate-800 rounded flex items-center justify-center font-bold">+</button>
-          </div>
-        </div>
-      `).join('');
-
-      renderCartTotals();
-    }
-
-    function renderCartTotals() {
-      const subtotalSYP = cart.reduce((sum, i) => sum + (i.priceSYP * i.qty), 0);
-      const deliverySYP = parseFloat(document.getElementById('custZone')?.value) || 0;
-      const totalSYP = subtotalSYP + deliverySYP;
-
-      document.getElementById('cartGrandTotalSYP').textContent = formatSYP(totalSYP);
-    }
-
-    function exportWhatsAppOrder() {
-      const name = document.getElementById('custName').value.trim();
-      const phone = document.getElementById('custPhone').value.trim();
-      const notes = document.getElementById('custNotes').value.trim();
-      const zoneSel = document.getElementById('custZone');
-      const zoneText = zoneSel.options[zoneSel.selectedIndex].text;
-      const deliverySYP = parseFloat(zoneSel.value) || 0;
-
-      if (!name || !phone) {
-        showToast("يرجى كتابة الاسم ورقم الهاتف لإتمام الطلب", "error");
-        return;
-      }
-
-      const subtotalSYP = cart.reduce((sum, i) => sum + (i.priceSYP * i.qty), 0);
-      const totalSYP = subtotalSYP + deliverySYP;
-
-      let msg = `⚡ *طلب شراء جديد - TECHNO E Servis*\n`;
-      msg += `📍 *الفرع:* دمشق - المزة جبل - بناء 27\n`;
-      msg += `━━━━━━━━━━━━━━━━━━━\n`;
-      msg += `👤 *العميل:* ${name}\n`;
-      msg += `📞 *الهاتف:* ${phone}\n`;
-      msg += `🚚 *التوصيل:* ${zoneText}\n`;
-      if (notes) msg += `📝 *ملاحظات:* ${notes}\n`;
-      msg += `━━━━━━━━━━━━━━━━━━━\n`;
-      msg += `📦 *القطع المطلوبة:*\n`;
-
-      cart.forEach((i, idx) => {
-        const brandStr = i.brand ? ` [${i.brand}]` : '';
-        msg += `${idx + 1}. ${i.name}${brandStr} (${i.qty}x) = ${formatSYP(i.priceSYP * i.qty)}\n`;
-      });
-
-      msg += `━━━━━━━━━━━━━━━━━━━\n`;
-      msg += `💰 *المجموع النهائي:* *${formatSYP(totalSYP)}*\n`;
-
-      cart = [];
-      saveStorage();
-      updateCartBadge();
-      closeCart();
-      window.open(`https://wa.me/${shopPhone}?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    function printOrderInvoice() {
-      const name = document.getElementById('custName').value.trim() || 'عميل محترم';
-      const phone = document.getElementById('custPhone').value.trim() || '-';
-      const subtotalSYP = cart.reduce((sum, i) => sum + (i.priceSYP * i.qty), 0);
-      const deliverySYP = parseFloat(document.getElementById('custZone')?.value) || 0;
-      const totalSYP = subtotalSYP + deliverySYP;
-
-      const win = window.open('', '_blank');
-      win.document.write(`
-        <html dir="rtl">
-        <head>
-          <title>فاتورة مبيع - Techno E Servis</title>
-          <style>
-            body { font-family: Tahoma, sans-serif; padding: 25px; color: #111; }
-            table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: right; font-size: 13px; }
-            th { background: #f1f5f9; }
-          </style>
-        </head>
-        <body>
-          <h2>Techno E Servis | أنظمة طاقة وإنفرترات وإنارة</h2>
-          <p>دمشق - المزة جبل - فيلات متصلة - بناء 27 | هاتف: 0992668807</p>
-          <hr>
-          <p><strong>العميل:</strong> ${name} | <strong>الهاتف:</strong> ${phone}</p>
-          <table>
-            <thead>
-              <tr><th>#</th><th>القطعة</th><th>الشركة</th><th>الكمية</th><th>السعر (ل.س)</th><th>الإجمالي (ل.س)</th></tr>
-            </thead>
-            <tbody>
-              ${cart.map((i, idx) => `
-                <tr><td>${idx+1}</td><td>${i.name}</td><td>${i.brand || '-'}</td><td>${i.qty}</td><td>${formatSYP(i.priceSYP)}</td><td>${formatSYP(i.priceSYP * i.qty)}</td></tr>
-              `).join('')}
-            </tbody>
-          </table>
-          <h3 style="text-align:left; color:#16a34a; margin-top:20px;">المجموع النهائي: ${formatSYP(totalSYP)}</h3>
-          <script>window.onload = function(){ window.print(); }<\/script>
-        </body>
-        </html>
-      `);
-      win.document.close();
-    }
-
-    /* Admin Operations */
-    function handleAdminButtonClick() {
-      if (document.getElementById('adminView').classList.contains('hidden')) {
-        if (isAdminLoggedIn) {
-          switchView('admin');
-        } else {
-          openPinModal();
-        }
-      } else {
-        switchView('store');
-      }
-    }
-
-    function openPinModal() {
-      document.getElementById('pinError').classList.add('hidden');
-      document.getElementById('pinInput').value = "";
-      document.getElementById('pinModal').classList.remove('hidden');
-      setTimeout(() => document.getElementById('pinInput').focus(), 100);
-    }
-
-    function closePinModal() {
-      document.getElementById('pinModal').classList.add('hidden');
-    }
-
-    function confirmPin() {
-      const val = document.getElementById('pinInput').value.trim();
-      if (val === adminPin) {
-        isAdminLoggedIn = true;
-        closePinModal();
-        switchView('admin');
-        showToast("أهلاً بك في لوحة تحكم المحل", "success");
-      } else {
-        document.getElementById('pinError').classList.remove('hidden');
-      }
-    }
-
-    function logoutAdmin() {
-      isAdminLoggedIn = false;
-      switchView('store');
-      showToast("تم تسجيل الخروج والعودة لوضع الزبون");
-    }
-
-    function switchView(view) {
-      if (view === 'admin') {
-        document.getElementById('storeView').classList.add('hidden');
-        document.getElementById('adminView').classList.remove('hidden');
-        document.getElementById('adminBtnText').textContent = "عرض المتجر";
-        document.getElementById('adminLockIcon').className = "fa-solid fa-shop text-neonGreen";
-        renderAdminDeliveryZones();
-        renderAdminCategoriesList();
-        renderAdminTable();
-      } else {
-        document.getElementById('storeView').classList.remove('hidden');
-        document.getElementById('adminView').classList.add('hidden');
-        document.getElementById('adminBtnText').textContent = "لوحة الإدارة";
-        document.getElementById('adminLockIcon').className = isAdminLoggedIn ? "fa-solid fa-sliders text-neonGreen" : "fa-solid fa-lock text-neonGreen";
-        renderCategoryTabs();
-        renderStore();
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    /* Dynamic Category Management in Admin */
-    function renderAdminCategoriesList() {
-      const list = document.getElementById('adminCategoriesList');
-      list.innerHTML = categories.map(cat => `
-        <div class="inline-flex items-center gap-2 bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-xl text-xs text-white">
-          <span class="font-bold">${cat}</span>
-          <button onclick="deleteCategory('${cat}')" class="text-red-400 hover:text-red-300 text-xs" title="حذف الصنف">
-            <i class="fa-solid fa-circle-xmark"></i>
-          </button>
-        </div>
-      `).join('');
-    }
-
-    function addNewCategory() {
-      const input = document.getElementById('newCategoryNameInput');
-      const newCat = input.value.trim();
-      if (!newCat) return;
-
-      if (categories.includes(newCat)) {
-        showToast("هذا الصنف موجود مسبقاً!", "error");
-        return;
-      }
-
-      categories.push(newCat);
-      saveStorage();
-      input.value = "";
-      renderAdminCategoriesList();
-      renderCategoryTabs();
-      showToast(`تمت إضافة صنف "${newCat}" بنجاح`, "success");
-    }
-
-    function deleteCategory(catName) {
-      if (categories.length <= 1) {
-        showToast("يجب بقاء صنف واحد على الأقل", "error");
-        return;
-      }
-      categories = categories.filter(c => c !== catName);
-      if (activeCategory === catName) activeCategory = 'all';
-      saveStorage();
-      renderAdminCategoriesList();
-      renderCategoryTabs();
-      showToast(`تم حذف الصنف "${catName}"`);
-    }
-
-    function populateCategorySelect(selectedCat = "") {
-      const sel = document.getElementById('pCategory');
-      sel.innerHTML = categories.map(c => `
-        <option value="${c}" ${c === selectedCat ? 'selected' : ''}>${c}</option>
-      `).join('');
-    }
-
-    function renderAdminTable() {
-      const tbody = document.getElementById('adminTableBody');
-      tbody.innerHTML = products.map(p => {
-        const hasImg = p.image && p.image.trim().length > 0;
-
-        return `
-          <tr class="hover:bg-slate-900/60">
-            <td class="py-2.5 px-3 font-bold text-white flex items-center gap-2">
-              <div class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0">
-                ${hasImg ? `<img src="${p.image}" class="w-full h-full object-cover">` : `<i class="fa-solid ${p.icon || 'fa-bolt'} text-neonGreen text-xs"></i>`}
-              </div>
-              <span class="truncate max-w-[160px]">${p.name}</span>
-            </td>
-            <td class="py-2.5 px-3 text-amber-300 font-semibold">${p.brand || '-'}</td>
-            <td class="py-2.5 px-3 text-slate-300">${p.category}</td>
-            <td class="py-2.5 px-3">
-              <div class="flex items-center gap-1">
-                <input 
-                  type="number" 
-                  step="500" 
-                  value="${p.priceSYP}" 
-                  onchange="quickPriceEdit('${p.id}', this.value)" 
-                  class="w-24 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-neonGreen font-bold"
-                />
-                <span class="text-[10px] text-slate-400">ل.س</span>
-              </div>
-            </td>
-            <td class="py-2.5 px-3 text-center">
-              <button 
-                onclick="toggleStock('${p.id}')"
-                class="px-2.5 py-1 rounded-lg text-[10px] font-black ${p.inStock ? 'bg-neonGreen/15 text-neonGreen border border-neonGreen/30' : 'bg-red-500/15 text-red-400 border border-red-500/30'}"
-              >
-                ${p.inStock ? 'متوفر' : 'غير متوفر'}
-              </button>
-            </td>
-            <td class="py-2.5 px-3 text-center">
-              <div class="flex items-center justify-center gap-2">
-                <button onclick="editProductModal('${p.id}')" class="p-1.5 bg-slate-800 rounded-lg text-cyan-400 hover:text-white" title="تعديل"><i class="fa-solid fa-pen-to-square"></i></button>
-                <button onclick="deleteProduct('${p.id}')" class="p-1.5 bg-slate-800 rounded-lg text-red-400 hover:text-white" title="حذف"><i class="fa-solid fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function quickPriceEdit(id, val) {
-      const p = parseFloat(val);
-      if (!isNaN(p) && p >= 0) {
-        const item = products.find(x => x.id === id);
-        if (item) {
-          item.priceSYP = p;
-          saveStorage();
-          showToast(`تم تعديل السعر إلى ${formatSYP(p)}`, "success");
-        }
-      }
-    }
-
-    function toggleStock(id) {
-      const item = products.find(x => x.id === id);
-      if (item) {
-        item.inStock = !item.inStock;
-        saveStorage();
-        renderAdminTable();
-        showToast(`حالة "${item.name}": ${item.inStock ? 'متوفر' : 'غير متوفر'}`);
-      }
-    }
-
-    function deleteProduct(id) {
-      products = products.filter(x => x.id !== id);
-      saveStorage();
-      renderAdminTable();
-      renderCategoryTabs();
-      showToast("تم حذف القطعة من المخزون", "error");
-    }
-
-    function saveAdminPhone() {
-      const val = document.getElementById('adminPhoneInput').value.trim().replace('+', '');
-      if (val.length > 5) {
-        shopPhone = val;
-        saveStorage();
-        showToast("تم تحديث رقم واتساب المتجر", "success");
-      }
-    }
-
-    function saveAdminPin() {
-      const val = document.getElementById('adminNewPinInput').value.trim();
-      if (val.length >= 4) {
-        adminPin = val;
-        saveStorage();
-        document.getElementById('adminNewPinInput').value = "";
-        showToast("تم تحديث رمز الحماية السري بنجاح", "success");
-      } else {
-        showToast("يجب أن يتكون الرمز من 4 أرقام على الأقل", "error");
-      }
-    }
-
-    /* Camera & Gallery Image Processing */
-    function handleImageUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-          const maxDim = 650;
-
-          if (width > height) {
-            if (width > maxDim) {
-              height *= maxDim / width;
-              width = maxDim;
-            }
-          } else {
-            if (height > maxDim) {
-              width *= maxDim / height;
-              height = maxDim;
-            }
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-
-          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.78);
-          setImagePreview(compressedBase64);
-          showToast("تم تجهيز الصورة بنجاح", "success");
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function setImagePreview(base64Url) {
-      const preview = document.getElementById('imagePreview');
-      const placeholder = document.getElementById('imagePlaceholderIcon');
-      const hiddenInput = document.getElementById('pCustomImageBase64');
-      const removeBtn = document.getElementById('removeImgBtn');
-
-      if (base64Url && base64Url.length > 0) {
-        preview.src = base64Url;
-        preview.classList.remove('hidden');
-        placeholder.classList.add('hidden');
-        hiddenInput.value = base64Url;
-        removeBtn.classList.remove('hidden');
-      } else {
-        preview.src = "";
-        preview.classList.add('hidden');
-        placeholder.classList.remove('hidden');
-        hiddenInput.value = "";
-        removeBtn.classList.add('hidden');
-        document.getElementById('cameraCaptureInput').value = "";
-        document.getElementById('galleryFileInput').value = "";
-      }
-    }
-
-    function removeUploadedImage() {
-      setImagePreview("");
-    }
-
-    function openProductModal() {
-      document.getElementById('prodModalTitle').textContent = "إضافة قطعة جديدة إلى Techno E Servis";
-      document.getElementById('editProdId').value = "";
-      document.getElementById('pName').value = "";
-      document.getElementById('pBrand').value = "";
-      populateCategorySelect(categories[0] || "إنفرترات");
-      document.getElementById('pPriceSYP').value = "";
-      document.getElementById('pVoltage').value = "";
-      document.getElementById('pPower').value = "";
-      document.getElementById('pCharger').value = "";
-      document.getElementById('pWarranty').value = "كفالة تجربة وصيانة";
-      document.getElementById('pInStock').value = "true";
-      document.getElementById('pIcon').value = "fa-microchip";
-      document.getElementById('pDesc').value = "";
-      setImagePreview("");
-      document.getElementById('productModal').classList.remove('hidden');
-    }
-
-    function editProductModal(id) {
-      const p = products.find(x => x.id === id);
-      if (!p) return;
-      document.getElementById('prodModalTitle').textContent = `تعديل: ${p.name}`;
-      document.getElementById('editProdId').value = p.id;
-      document.getElementById('pName').value = p.name;
-      document.getElementById('pBrand').value = p.brand || "";
-      populateCategorySelect(p.category);
-      document.getElementById('pPriceSYP').value = p.priceSYP;
-      document.getElementById('pVoltage').value = p.voltage || "";
-      document.getElementById('pPower').value = p.power || "";
-      document.getElementById('pCharger').value = p.charger || "";
-      document.getElementById('pWarranty').value = p.warranty || "";
-      document.getElementById('pInStock').value = p.inStock ? "true" : "false";
-      document.getElementById('pIcon').value = p.icon || "fa-microchip";
-      document.getElementById('pDesc').value = p.description || "";
-      setImagePreview(p.image || "");
-      document.getElementById('productModal').classList.remove('hidden');
-    }
-
-    function closeProductModal() {
-      document.getElementById('productModal').classList.add('hidden');
-    }
-
-    function handleProductSubmit(e) {
-      e.preventDefault();
-      const id = document.getElementById('editProdId').value;
-      const name = document.getElementById('pName').value.trim();
-      const brand = document.getElementById('pBrand').value.trim();
-      const category = document.getElementById('pCategory').value;
-      const priceSYP = parseFloat(document.getElementById('pPriceSYP').value);
-      const voltage = document.getElementById('pVoltage').value.trim();
-      const power = document.getElementById('pPower').value.trim();
-      const charger = document.getElementById('pCharger').value.trim();
-      const warranty = document.getElementById('pWarranty').value.trim();
-      const inStock = document.getElementById('pInStock').value === "true";
-      const icon = document.getElementById('pIcon').value;
-      const description = document.getElementById('pDesc').value.trim();
-      const image = document.getElementById('pCustomImageBase64').value;
-
-      if (!name || isNaN(priceSYP)) return;
-
-      if (id) {
-        const idx = products.findIndex(x => x.id === id);
-        if (idx !== -1) {
-          products[idx] = { ...products[idx], name, brand, category, priceSYP, voltage, power, charger, warranty, inStock, icon, description, image };
-          showToast("تم تحديث بيانات القطعة والصورة", "success");
-        }
-      } else {
-        products.unshift({
-          id: "p_" + Date.now(),
-          name, brand, category, priceSYP, voltage, power, charger, warranty, inStock, icon, description, image
-        });
-        showToast("تمت إضافة القطعة بنجاح", "success");
-      }
-
-      saveStorage();
-      closeProductModal();
-      renderAdminTable();
-      renderCategoryTabs();
-    }
-
-    function openCalcModal() {
-      calcSystem();
-      document.getElementById('calcModal').classList.remove('hidden');
-    }
-    function closeCalcModal() {
-      document.getElementById('calcModal').classList.add('hidden');
-    }
-
-    function calcSystem() {
-      const lights = document.getElementById('loadLight').checked;
-      const fridge = document.getElementById('loadFridge').checked;
-      const fan = document.getElementById('loadFan').checked;
-      const pump = document.getElementById('loadPump').checked;
-
-      let w = 0;
-      if (lights) w += 250;
-      if (fridge) w += 400;
-      if (fan) w += 600;
-      if (pump) w += 800;
-
-      if (w > 1200) {
-        document.getElementById('recInvLabel').textContent = "إنفرتر هجين 5.5kW (48V) بيور ساين";
-        document.getElementById('recBatLabel').textContent = "بطارية ليثيوم 48V 100Ah أو 4 بطاريات جل 200Ah";
-      } else if (w <= 300) {
-        document.getElementById('recInvLabel').textContent = "إنفرتر 1.5kW إلى 2.2kW (12V أو 24V)";
-        document.getElementById('recBatLabel').textContent = "بطارية تيوبلر أو جل 150Ah إلى 200Ah";
-      } else {
-        document.getElementById('recInvLabel').textContent = "إنفرتر هجين 3.2kW (24V) بيور ساين";
-        document.getElementById('recBatLabel').textContent = "2x بطارية 150Ah أو ليثيوم 24V 100Ah";
-      }
-    }
-
-    function sendCalculatedSystemWhatsApp() {
-      const inv = document.getElementById('recInvLabel').textContent;
-      const bat = document.getElementById('recBatLabel').textContent;
-      let text = `⚡ *طلب عرض سعر منظومة طاقة (من حاسبة الموقع):*\n`;
-      text += `🔹 *الإنفرتر المقترح:* ${inv}\n`;
-      text += `🔹 *البطاريات المقترحة:* ${bat}\n`;
-      text += `أرجو تزويدي بالأسعار المتوفرة عندكم في فرع المزة بالليرة السورية.`;
-      closeCalcModal();
-      window.open(`https://wa.me/${shopPhone}?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    let maintHasPhoto = false;
-
-    function openMaintModal() {
-      document.getElementById('maintModal').classList.remove('hidden');
-    }
-    function closeMaintModal() {
-      document.getElementById('maintModal').classList.add('hidden');
-    }
-
-    function handleMaintImageUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const preview = document.getElementById('maintImagePreview');
-        const placeholder = document.getElementById('maintImagePlaceholder');
-        const removeBtn = document.getElementById('removeMaintImgBtn');
-        const note = document.getElementById('maintPhotoNote');
-
-        preview.src = e.target.result;
-        preview.classList.remove('hidden');
-        placeholder.classList.add('hidden');
-        removeBtn.classList.remove('hidden');
-        note.classList.remove('hidden');
-        maintHasPhoto = true;
-        showToast("تم إرفاق صورة العطل بنجاح", "success");
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function removeMaintImage() {
-      const preview = document.getElementById('maintImagePreview');
-      const placeholder = document.getElementById('maintImagePlaceholder');
-      const removeBtn = document.getElementById('removeMaintImgBtn');
-      const note = document.getElementById('maintPhotoNote');
-
-      preview.src = "";
-      preview.classList.add('hidden');
-      placeholder.classList.remove('hidden');
-      removeBtn.classList.add('hidden');
-      note.classList.add('hidden');
-      document.getElementById('maintCameraInput').value = "";
-      document.getElementById('maintGalleryInput').value = "";
-      maintHasPhoto = false;
-    }
-
-    function sendMaintWhatsApp() {
-      const dev = document.getElementById('maintDevice').value.trim() || 'إنفرتر طاقة';
-      const fault = document.getElementById('maintFault').value.trim();
-      const client = document.getElementById('maintClient').value.trim();
-
-      if (!fault) {
-        showToast("يرجى كتابة وصف المشكلة أو العطل أولاً", "error");
-        return;
-      }
-
-      if (!client) {
-        showToast("يرجى كتابة الاسم ورقم الهاتف", "error");
-        return;
-      }
-
-      let text = `🛠️ *حجز صيانة إنفرتر - ورشة Techno E Servis*\n`;
-      text += `⚡ *الموديل:* ${dev}\n`;
-      text += `⚠️ *وصف المشكلة:* ${fault}\n`;
-      if (maintHasPhoto) {
-        text += `📸 *مرفق:* الزبون جهّز صورة للعطل/الشاشة (يرجى إرسالها في هذه المحادثة)\n`;
-      }
-      text += `👤 *العميل:* ${client}\n`;
-      text += `📍 *الفرع:* مزة جبل - بناء 27\n`;
-
-      closeMaintModal();
-      window.open(`https://wa.me/${shopPhone}?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    /* Toast Helper */
-    let toastTimer;
-    function showToast(msg, type = "info") {
-      const box = document.getElementById('toastBox');
-      const text = document.getElementById('toastMsg');
-      const icon = document.getElementById('toastIcon');
-
-      clearTimeout(toastTimer);
-      text.textContent = msg;
-
-      if (type === "success") {
-        icon.className = "w-7 h-7 rounded-lg bg-neonGreen/20 text-neonGreen flex items-center justify-center text-xs flex-shrink-0";
-        icon.innerHTML = `<i class="fa-solid fa-check"></i>`;
-      } else if (type === "error") {
-        icon.className = "w-7 h-7 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center text-xs flex-shrink-0";
-        icon.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
-      } else {
-        icon.className = "w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs flex-shrink-0";
-        icon.innerHTML = `<i class="fa-solid fa-info"></i>`;
-      }
-
-      box.classList.remove('translate-y-28', 'opacity-0');
-      box.classList.add('translate-y-0', 'opacity-100');
-
-      toastTimer = setTimeout(() => {
-        box.classList.remove('translate-y-0', 'opacity-100');
-        box.classList.add('translate-y-28', 'opacity-0');
-      }, 3000);
-    }
-  </script>
-</body>
-</html>
+                class="w-28 bg-slate-950 border border-slate-700 ro
