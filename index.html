@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Techno E Servis | أنظمة طاقة بديلة وصيانة إنفرترات</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Google Fonts: Cairo & Orbitron -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'sans-serif'],
+            tech: ['Orbitron', 'sans-serif'],
+          },
+          colors: {
+            titanium: '#0a0e17',
+            surface: '#111827',
+            cardBg: '#162032',
+            neonGreen: '#22c55e',
+            neonLime: '#a3e635',
+            neonYellow: '#eab308'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: radial-gradient(circle at top right, #131d2e 0%, #0a0e17 100%);
+      color: #f1f5f9;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .glow-box {
+      box-shadow: 0 0 20px -3px rgba(34, 197, 94, 0.25);
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-neonGreen selection:text-black">
+
+  <!-- ================= TOP NOTICE BAR ================= -->
+  <div class="bg-slate-950/90 border-b border-slate-800 text-[11px] text-slate-300 py-1.5 px-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-1.5 text-slate-300 truncate">
+        <i class="fa-solid fa-location-dot text-neonGreen text-xs"></i>
+        <span class="truncate">دمشق - المزة جبل - فيلات متصلة - بناء 27</span>
+      </div>
+      <div class="flex items-center gap-3 mr-auto">
+        <a href="tel:0992668807" class="hover:text-neonGreen text-neonLime font-bold flex items-center gap-1">
+          <i class="fa-solid fa-phone text-[10px]"></i>
+          <span dir="ltr">0992668807</span>
+        </a>
+        <span class="text-slate-600">|</span>
+        <span class="text-neonGreen font-bold flex items-center gap-1">
+          <i class="fa-solid fa-coins text-[10px]"></i>
+          <span>التسعير بالليرة السورية (ل.س)</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= STICKY HEADER ================= -->
+  <header class="sticky top-0 z-40 bg-surface/95 backdrop-blur-md border-b border-slate-800/80 shadow-xl">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5">
+      <div class="flex items-center justify-between gap-2">
+        
+        <!-- Logo -->
+        <div onclick="switchView('store')" class="flex items-center gap-2 cursor-pointer select-none">
+          <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-slate-900 border border-slate-700/80 p-1 flex flex-col items-center justify-center shadow-lg">
+            <svg viewBox="0 0 80 40" class="w-full h-6">
+              <path d="M 5 20 Q 22 -3, 40 20 T 75 20" fill="none" stroke="#22c55e" stroke-width="4.5" stroke-linecap="round"/>
+              <path d="M 12 20 Q 30 -5, 48 20 T 80 20" fill="none" stroke="#eab308" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+            </svg>
+            <span class="text-[7px] font-tech text-neonGreen font-black tracking-widest leading-none">PURE SINE</span>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-1 leading-none">
+              <span class="text-lg sm:text-xl font-black font-tech text-white">TECHNO <span class="text-neonGreen">E</span></span>
+              <span class="text-xs font-light font-tech text-slate-300">Servis</span>
+            </div>
+            <p class="text-[10px] text-slate-400 font-semibold mt-0.5">أنظمة طاقة • إنارة • صيانة إنفرترات</p>
+          </div>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          
+          <button id="adminHeaderBtn" onclick="handleAdminButtonClick()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-200 transition-all flex items-center gap-1.5">
+            <i id="adminLockIcon" class="fa-solid fa-lock text-neonGreen"></i>
+            <span id="adminBtnText">لوحة الإدارة</span>
+          </button>
+
+          <button onclick="openCart()" class="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-neonGreen hover:bg-emerald-400 active:scale-95 text-slate-950 font-black flex items-center justify-center transition-all glow-box">
+            <i class="fa-solid fa-cart-shopping text-base"></i>
+            <span id="cartCountBadge" class="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-surface">0</span>
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= TOAST NOTIFICATION ================= -->
+  <div id="toastBox" class="fixed bottom-4 left-4 right-4 sm:right-auto sm:w-96 z-50 transform translate-y-28 opacity-0 transition-all duration-300 bg-cardBg border border-slate-700 text-white p-3.5 rounded-2xl shadow-2xl flex items-center gap-3 pointer-events-none">
+    <div id="toastIcon" class="w-8 h-8 rounded-xl bg-neonGreen/20 text-neonGreen flex items-center justify-center text-sm font-bold flex-shrink-0">
+      <i class="fa-solid fa-check"></i>
+    </div>
+    <span id="toastMsg" class="text-xs sm:text-sm font-semibold"></span>
+  </div>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 py-6 flex-1 w-full">
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: STORE FRONT (CLIENT VIEW)          -->
+    <!-- ========================================== -->
+    <div id="storeView" class="space-y-8">
+
+      <!-- HERO BANNER -->
+      <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-cardBg to-slate-950 border border-slate-800 p-5 sm:p-8 shadow-2xl">
+        <div class="relative z-10 max-w-2xl space-y-3 sm:space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neonGreen/10 border border-neonGreen/30 text-neonGreen text-xs font-black">
+            <span class="w-2 h-2 rounded-full bg-neonGreen animate-ping"></span>
+            الورشة المركزية المتخصصة لتجديد وكفالة الإنفرترات ومستلزمات الطاقة
+          </div>
+
+          <h1 class="text-2xl sm:text-4xl font-black text-white leading-tight">
+            حلول طاقة بديلة وإنارة متكاملة بمواصفات <span class="text-transparent bg-clip-text bg-gradient-to-r from-neonGreen to-neonLime">Pure Sine Wave</span>
+          </h1>
+
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            مبيع وتجديد إنفرترات الطاقة، بطاريات ليثيوم وجل، لمبات إنارة DC/AC من كبرى الشركات، كابلات ووصلات نحاسية، وقواطع حماية مع فحص أحمال دقيق.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-2.5 pt-2">
+            <a href="#catalogAnchor" class="px-4 py-2.5 rounded-xl bg-neonGreen hover:bg-emerald-400 text-slate-950 font-black text-xs transition-all shadow-md shadow-neonGreen/20 flex items-center gap-1.5">
+              <i class="fa-solid fa-bolt"></i>
+              <span>تصفح الأصناف والأسعار</span>
+            </a>
+
+            <button onclick="openCalcModal()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-calculator text-neonLime"></i>
+              <span>احسب منظومتك</span>
+            </button>
+
+            <button onclick="openMaintModal()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 text-xs font-bold transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-screwdriver-wrench"></i>
+              <span>طلب صيانة إنفرتر</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- DYNAMIC CATEGORIES & SEARCH BAR -->
+      <section id="catalogAnchor" class="space-y-3">
+        <div class="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center justify-between">
+          
+          <!-- Dynamic Categories Bar -->
+          <div id="categoryTabsContainer" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+            <!-- Rendered dynamically via JS -->
+          </div>
+
+          <!-- Search Input (Searches Name, Brand, Specs) -->
+          <div class="relative w-full sm:w-72">
+            <i class="fa-solid fa-magnifying-glass absolute right-3 top-3 text-slate-500 text-xs"></i>
+            <input 
+              type="text" 
+              id="searchInput" 
+              oninput="handleSearch(this.value)" 
+              placeholder="ابحث عن قطعة، شركة (Philips, Bison)..." 
+              class="w-full bg-cardBg border border-slate-800 rounded-xl py-2 pr-9 pl-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-neonGreen"
+            />
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
+          <label class="flex items-center gap-1.5 cursor-pointer text-slate-300 hover:text-neonGreen select-none">
+            <input type="checkbox" id="stockOnlyCheckbox" onchange="toggleStockFilter(this.checked)" class="rounded bg-cardBg border-slate-700 text-neonGreen">
+            <span>عرض القطع المتوفرة حالياً في المحل فقط</span>
+          </label>
+          <span class="text-neonGreen/90 font-semibold">جميع الأسعار بالليرة السورية</span>
+        </div>
+      </section>
+
+      <!-- PRODUCTS CATALOG GRID -->
+      <section>
+        <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"></div>
+
+        <div id="noProductsFound" class="hidden text-center py-16 bg-cardBg/40 rounded-3xl border border-slate-800">
+          <i class="fa-solid fa-box-open text-4xl text-slate-600 mb-2"></i>
+          <p class="text-sm font-bold text-white">لم يتم العثور على قطع مطابقة للبحث</p>
+          <p class="text-xs text-slate-400 mt-1">جرّب اختيار قسم آخر أو تغيير كلمات البحث.</p>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: ADMIN DASHBOARD (OWNER ONLY)       -->
+    <!-- ========================================== -->
+    <div id="adminView" class="hidden space-y-6">
+
+      <!-- Admin Header -->
+      <div class="bg-gradient-to-r from-cardBg via-slate-900 to-surface border border-slate-800 rounded-3xl p-5 sm:p-7 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neonGreen/10 border border-neonGreen/30 text-neonGreen text-xs font-black mb-1">
+            <i class="fa-solid fa-sliders"></i>
+            لوحة الإدارة والتسعير - Techno E Servis
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black text-white">إدارة الأصناف والصور والأسعار بالليرة السورية</h2>
+          <p class="text-xs text-slate-400 mt-0.5">أضف أصنافاً جديدة (لمبات، وصلات...) والتقط صوراً مباشرة من كاميرا الموبايل.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="openProductModal()" class="px-3.5 py-2 rounded-xl bg-neonGreen hover:bg-emerald-400 text-slate-950 font-black text-xs shadow-md shadow-neonGreen/20 flex items-center gap-1.5">
+            <i class="fa-solid fa-plus"></i>
+            <span>إضافة قطعة / منتج</span>
+          </button>
+          <button onclick="logoutAdmin()" class="px-3 py-2 rounded-xl bg-red-600/90 hover:bg-red-500 text-white font-bold text-xs flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>خروج</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dynamic Category Manager Box -->
+      <div class="bg-cardBg border border-slate-800 p-4 sm:p-5 rounded-2xl space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-black text-white flex items-center gap-2">
+            <i class="fa-solid fa-folder-plus text-neonGreen"></i>
+            <span>إدارة الأصناف والأقسام (إضافة أو حذف صنف)</span>
+          </h3>
+          <span class="text-[11px] text-slate-400">تظهر هذه الأقسام فوراً للزبائن</span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input type="text" id="newCategoryNameInput" placeholder="اكتب اسم الصنف الجديد (مثال: لمبات طاقة، كابلات نحاس، ألواح شمسية)..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-neonGreen" onkeydown="if(event.key==='Enter'){ event.preventDefault(); addNewCategory(); }">
+          <button onclick="addNewCategory()" class="px-4 py-2 bg-neonGreen hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-xs whitespace-nowrap flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-plus"></i>
+            <span>إضافة الصنف</span>
+          </button>
+        </div>
+
+        <div id="adminCategoriesList" class="flex flex-wrap gap-2 pt-1">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Shop Settings (WhatsApp & PIN) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="bg-cardBg border border-slate-800 p-4 rounded-2xl">
+          <div class="text-xs text-slate-400 mb-1.5 flex items-center justify-between">
+            <span>رقم واتساب استلام الطلبات (المزة)</span>
+            <i class="fa-brands fa-whatsapp text-emerald-400"></i>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" id="adminPhoneInput" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-white focus:outline-none focus:border-neonGreen" dir="ltr">
+            <button onclick="saveAdminPhone()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs whitespace-nowrap">حفظ الرقم</button>
+          </div>
+        </div>
+
+        <div class="bg-cardBg border border-slate-800 p-4 rounded-2xl">
+          <div class="text-xs text-slate-400 mb-1.5 flex items-center justify-between">
+            <span>تغيير رمز الحماية السري (PIN)</span>
+            <i class="fa-solid fa-key text-amber-400"></i>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="password" id="adminNewPinInput" placeholder="الرمز الجديد (4 أرقام على الأقل)..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-neonGreen">
+            <button onclick="saveAdminPin()" class="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs whitespace-nowrap">تغيير الرمز</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delivery Fees Management Box -->
+      <div class="bg-cardBg border border-slate-800 p-4 sm:p-5 rounded-2xl space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+          <div>
+            <h3 class="text-sm font-black text-white flex items-center gap-2">
+              <i class="fa-solid fa-truck-fast text-neonGreen"></i>
+              <span>إدارة مناطق وأجور التوصيل والشحن (ل.س)</span>
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">أضف مناطق جديدة أو عدّل أسعار التوصيل مباشرة</p>
+          </div>
+        </div>
+
+        <!-- Add New Delivery Zone Form -->
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input type="text" id="newZoneNameInput" placeholder="اسم المنطقة (مثال: قدسيا، صحنايا، جرمانا...)" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-neonGreen">
+          <input type="number" step="1000" id="newZoneFeeInput" placeholder="أجرة التوصيل (ل.س)" class="w-full sm:w-40 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-neonGreen font-bold focus:outline-none focus:border-neonGreen" onkeydown="if(event.key==='Enter'){ event.preventDefault(); addDeliveryZone(); }">
+          <button onclick="addDeliveryZone()" class="px-4 py-2 bg-neonGreen hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-xs whitespace-nowrap flex items-center justify-center gap-1.5 shadow">
+            <i class="fa-solid fa-plus"></i>
+            <span>إضافة منطقة</span>
+          </button>
+        </div>
+
+        <!-- Dynamic Delivery Zones List -->
+        <div id="adminDeliveryZonesList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 pt-1">
+          <!-- Rendered dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Inventory Table -->
+      <div class="bg-cardBg border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+        <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+          <h3 class="text-sm font-black text-white">قائمة المنتجات والأسعار (ل.س)</h3>
+          <span class="text-xs text-slate-400">عدّل السعر بالليرة السورية مباشرة</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-xs">
+            <thead class="bg-slate-950 text-slate-400 font-bold border-b border-slate-800">
+              <tr>
+                <th class="py-2.5 px-3">القطعة</th>
+                <th class="py-2.5 px-3">الشركة المصنعة</th>
+                <th class="py-2.5 px-3">الصنف</th>
+                <th class="py-2.5 px-3">السعر (ل.س)</th>
+                <th class="py-2.5 px-3 text-center">التوفر</th>
+                <th class="py-2.5 px-3 text-center">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody" class="divide-y divide-slate-800 text-slate-200"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================= SOLAR CALCULATOR MODAL ================= -->
+  <div id="calcModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
+    <div class="bg-cardBg border border-slate-700 rounded-3xl w-full max-w-md p-5 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-sm font-black text-white flex items-center gap-1.5">
+          <i class="fa-solid fa-calculator text-neonLime"></i>
+          <span>حاسبة حجم الإنفرتر والبطارية المقترحة</span>
+        </h3>
+        <button onclick="closeCalcModal()" class="w-7 h-7 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center text-xs">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-2.5 text-xs">
+        <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800 cursor-pointer">
+          <span class="text-white">💡 إنارة LED، راوتر وشاشات (حوالي 250W)</span>
+          <input type="checkbox" id="loadLight" checked onchange="calcSystem()" class="rounded bg-slate-800 text-neonGreen">
+        </label>
+        <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800 cursor-pointer">
+          <span class="text-white">❄️ براد منزلي إنفرتر حديث (حوالي 350W)</span>
+          <input type="checkbox" id="loadFridge" checked onchange="calcSystem()" class="rounded bg-slate-800 text-neonGreen">
+        </label>
+        <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800 cursor-pointer">
+          <span class="text-white">💨 مروحة تهوية أو مكيف طاقة صغير (حوالي 600W)</span>
+          <input type="checkbox" id="loadFan" onchange="calcSystem()" class="rounded bg-slate-800 text-neonGreen">
+        </label>
+        <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800 cursor-pointer">
+          <span class="text-white">🚰 مضخة ماء نصف حصان (حوالي 750W)</span>
+          <input type="checkbox" id="loadPump" onchange="calcSystem()" class="rounded bg-slate-800 text-neonGreen">
+        </label>
+
+        <div class="p-3 rounded-2xl bg-slate-950 border border-neonGreen/30 space-y-1 mt-3">
+          <div class="text-[11px] text-slate-400">التوصية الهندسية المقترحة:</div>
+          <div class="font-black text-neonGreen text-sm" id="recInvLabel">إنفرتر 3.2kW (24V) هجين</div>
+          <div class="font-bold text-amber-400 text-xs" id="recBatLabel">2x بطارية 150Ah أو ليثيوم 24V</div>
+        </div>
+
+        <button onclick="sendCalculatedSystemWhatsApp()" class="w-full py-2.5 bg-neonGreen hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md">
+          <i class="fa-brands fa-whatsapp text-sm"></i>
+          <span>طلب عرض سعر لهذه المنظومة عبر واتساب</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= REPAIR MODAL ================= -->
+  <div id="maintModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
+    <div class="bg-cardBg border border-slate-700 rounded-3xl w-full max-w-md p-5 space-y-3.5 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-sm font-black text-white flex items-center gap-1.5">
+          <i class="fa-solid fa-screwdriver-wrench text-amber-400"></i>
+          <span>حجز كشف وصيانة إنفرتر - ورشة المزة</span>
+        </h3>
+        <button onclick="closeMaintModal()" class="w-7 h-7 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center text-xs">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">نوع الإنفرتر وقدرته</label>
+          <input type="text" id="maintDevice" placeholder="مثال: غروات 5kW هجين أو بيسون 3kW" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">وصف المشكلة أو العطل بالتفصيل *</label>
+          <textarea id="maintFault" rows="3" placeholder="اكتب هنا شو عم يصير بالجهاز (مثال: عم يعطي كود خطأ 09 على الشاشة، أو بيفصل عند تشغيل البراد، أو ما عم يشحن من الألواح...)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400"></textarea>
+        </div>
+
+        <!-- Optional Fault / Screen Image Attachment -->
+        <div class="p-3 bg-slate-950/90 rounded-2xl border border-slate-800 space-y-2">
+          <label class="block text-amber-400 font-bold text-[11px]">
+            <i class="fa-solid fa-camera mr-1"></i> إرفاق صورة للعطل أو شاشة الإنفرتر (اختياري)
+          </label>
+          
+          <div class="flex items-center gap-3">
+            <div class="w-16 h-16 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0">
+              <img id="maintImagePreview" src="" alt="معاينة العطل" class="w-full h-full object-cover hidden" />
+              <i id="maintImagePlaceholder" class="fa-solid fa-image text-slate-600 text-xl"></i>
+            </div>
+            
+            <div class="flex-1 space-y-1.5">
+              <div class="flex flex-wrap gap-1.5">
+                <label class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl cursor-pointer text-[11px] shadow">
+                  <i class="fa-solid fa-camera"></i>
+                  <span>تصوير بالكاميرا</span>
+                  <input type="file" id="maintCameraInput" accept="image/*" capture="environment" class="hidden" onchange="handleMaintImageUpload(event)">
+                </label>
+
+                <label class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl cursor-pointer text-[11px] border border-slate-700">
+                  <i class="fa-solid fa-images text-amber-400"></i>
+                  <span>من الاستوديو</span>
+                  <input type="file" id="maintGalleryInput" accept="image/*" class="hidden" onchange="handleMaintImageUpload(event)">
+                </label>
+              </div>
+
+              <button type="button" id="removeMaintImgBtn" onclick="removeMaintImage()" class="hidden text-red-400 hover:text-red-300 text-[11px] font-bold">
+                <i class="fa-solid fa-trash mr-1"></i> إزالة الصورة
+              </button>
+            </div>
+          </div>
+          <p id="maintPhotoNote" class="hidden text-[10px] text-neonGreen font-semibold">
+            <i class="fa-solid fa-circle-info ml-1"></i> تم تجهيز الصورة؛ عند فتح محادثة واتساب يرجى إرسالها مباشرة مع الرسالة.
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">الاسم ورقم الهاتف للتواصل *</label>
+          <input type="text" id="maintClient" placeholder="اسمك ورقم الموبايل" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400">
+        </div>
+
+        <button onclick="sendMaintWhatsApp()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md">
+          <i class="fa-brands fa-whatsapp text-sm"></i>
+          <span>إرسال طلب الصيانة للورشة فوراً</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PIN AUTH MODAL ================= -->
+  <div id="pinModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3">
+    <div class="bg-cardBg border border-slate-700 rounded-3xl w-full max-w-xs p-6 text-center space-y-4 shadow-2xl">
+      <div class="w-14 h-14 rounded-2xl bg-neonGreen/10 border border-neonGreen/30 text-neonGreen flex items-center justify-center text-xl mx-auto">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <div>
+        <h4 class="text-base font-black text-white">دخول إدارة المحل</h4>
+        <p class="text-xs text-slate-400 mt-1">أدخل الرمز السري للتحكم بالأصناف والأسعار</p>
+      </div>
+      <input 
+        type="password" 
+        id="pinInput" 
+        placeholder="••••" 
+        maxlength="8" 
+        class="w-full text-center tracking-widest text-lg font-mono bg-slate-900 border border-slate-700 rounded-xl py-2 text-neonGreen focus:outline-none focus:border-neonGreen"
+        onkeydown="if(event.key==='Enter') confirmPin()"
+      />
+      <div id="pinError" class="text-red-400 text-[11px] font-bold hidden">الرمز غير صحيح، حاول ثانية</div>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="closePinModal()" class="py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">إلغاء</button>
+        <button onclick="confirmPin()" class="py-2 rounded-xl bg-neonGreen text-slate-950 text-xs font-black">تأكيد</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ADD / EDIT PRODUCT MODAL (CAMERA + BRAND + SYP) ================= -->
+  <div id="productModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
+    <div class="bg-cardBg border border-slate-700 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl">
+      <div class="p-4 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+        <h4 id="prodModalTitle" class="text-sm font-black text-white">إضافة قطعة جديدة للمحل</h4>
+        <button onclick="closeProductModal()" class="w-7 h-7 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center text-xs">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleProductSubmit(event)" class="p-5 space-y-3 max-h-[82vh] overflow-y-auto text-xs">
+        <input type="hidden" id="editProdId" value="">
+        <input type="hidden" id="pCustomImageBase64" value="">
+
+        <!-- Name & Brand -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">اسم القطعة / الموديل *</label>
+            <input type="text" id="pName" required placeholder="مثال: لمبة ليد 12 فولت 15 واط" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white">
+          </div>
+          <div>
+            <label class="block text-neonLime font-semibold mb-1">الشركة المصنعة / الماركة *</label>
+            <input type="text" id="pBrand" required placeholder="مثال: Philips / Bison / Osram" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white">
+          </div>
+        </div>
+
+        <!-- Category & Price SYP -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">الصنف / القسم *</label>
+            <select id="pCategory" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white">
+              <!-- Populated dynamically from categories list -->
+            </select>
+          </div>
+          <div>
+            <label class="block text-neonGreen font-semibold mb-1">السعر بالليرة السورية (ل.س) *</label>
+            <input type="number" step="500" id="pPriceSYP" required placeholder="مثال: 45000" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold">
+          </div>
+        </div>
+
+        <!-- CAMERA DIRECT CAPTURE + GALLERY UPLOAD -->
+        <div class="p-3 bg-slate-950/90 rounded-2xl border border-slate-800 space-y-2.5">
+          <label class="block text-neonGreen font-bold text-[11px]">
+            <i class="fa-solid fa-camera mr-1"></i> صورة القطعة (التقاط مباشر بالكاميرا أو من الاستوديو)
+          </label>
+          
+          <div class="flex items-center gap-3">
+            <div id="imagePreviewContainer" class="w-20 h-20 rounded-2xl bg-slate-900 border border-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0 relative">
+              <img id="imagePreview" src="" alt="معاينة" class="w-full h-full object-cover hidden" />
+              <i id="imagePlaceholderIcon" class="fa-solid fa-image text-slate-600 text-2xl"></i>
+            </div>
+            
+            <div class="flex-1 space-y-2">
+              <div class="flex flex-wrap gap-1.5">
+                <!-- Direct Camera Capture Button -->
+                <label class="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-neonGreen hover:bg-emerald-400 text-slate-950 font-black rounded-xl cursor-pointer text-[11px] shadow">
+                  <i class="fa-solid fa-camera"></i>
+                  <span>التقاط بالكاميرا</span>
+                  <input type="file" id="cameraCaptureInput" accept="image/*" capture="environment" class="hidden" onchange="handleImageUpload(event)">
+                </label>
+
+                <!-- Gallery Picker Button -->
+                <label class="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl cursor-pointer text-[11px] border border-slate-700">
+                  <i class="fa-solid fa-images text-neonLime"></i>
+                  <span>من الاستوديو</span>
+                  <input type="file" id="galleryFileInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                </label>
+              </div>
+
+              <button type="button" id="removeImgBtn" onclick="removeUploadedImage()" class="hidden text-red-400 hover:text-red-300 text-[11px] font-bold">
+                <i class="fa-solid fa-trash mr-1"></i> حذف الصورة
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Technical Specs -->
+        <div class="p-3 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-2">
+          <div class="font-bold text-slate-300 text-[11px]">مواصفات إضافية (اختياري حسب نوع القطعة):</div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-400 text-[10px] mb-0.5">الجهد / الفولتية</label>
+              <input type="text" id="pVoltage" placeholder="12V DC أو 220V AC" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-2.5 py-1 text-white">
+            </div>
+            <div>
+              <label class="block text-slate-400 text-[10px] mb-0.5">الاستطاعة / القياس</label>
+              <input type="text" id="pPower" placeholder="15W / 4.5kW / 6mm" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-2.5 py-1 text-white">
+            </div>
+            <div>
+              <label class="block text-slate-400 text-[10px] mb-0.5">ميزة إضافية</label>
+              <input type="text" id="pCharger" placeholder="نحاس صافي / إضاءة بيضاء" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-2.5 py-1 text-white">
+            </div>
+            <div>
+              <label class="block text-slate-400 text-[10px] mb-0.5">الكفالة والضمان</label>
+              <input type="text" id="pWarranty" placeholder="كفالة تبديل / 6 أشهر" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-2.5 py-1 text-white">
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">حالة التوفر</label>
+            <select id="pInStock" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white">
+              <option value="true">متوفر في المحل</option>
+              <option value="false">غير متوفر حالياً</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">الأيقونة البديلة (عند عدم وجود صورة)</label>
+            <select id="pIcon" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white">
+              <option value="fa-microchip">إنفرتر / إلكترونيات</option>
+              <option value="fa-car-battery">بطارية</option>
+              <option value="fa-lightbulb">لمبة إنارة</option>
+              <option value="fa-plug">وصلات وكابلات</option>
+              <option value="fa-shield-halved">قواطع وحماية</option>
+              <option value="fa-screwdriver-wrench">صيانة وتجهيز</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">شرح إضافي للقطعة</label>
+          <textarea id="pDesc" rows="2" placeholder="تفاصيل إضافية للزبون..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+          <button type="button" onclick="closeProductModal()" class="px-3.5 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold">إلغاء</button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-neonGreen text-slate-950 font-black">حفظ ونشر القطعة</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= CART DRAWER (SYP ONLY) ================= -->
+  <div id="cartBackdrop" onclick="closeCart()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden"></div>
+  <div id="cartDrawer" class="fixed top-0 left-0 bottom-0 w-full sm:w-96 bg-surface border-r border-slate-800 z-50 transform -translate-x-full transition-transform duration-300 flex flex-col justify-between shadow-2xl">
+    
+    <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-cart-shopping text-neonGreen"></i>
+        <h4 class="text-sm font-black text-white">سلة الطلبات - Techno E</h4>
+      </div>
+      <button onclick="closeCart()" class="w-7 h-7 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center text-xs">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-4 space-y-3">
+      <div id="cartItemsContainer" class="space-y-2"></div>
+      
+      <div id="emptyCartNotice" class="hidden text-center py-12">
+        <i class="fa-solid fa-cart-flatbed text-3xl text-slate-600 mb-2"></i>
+        <p class="text-xs font-bold text-slate-300">السلة فارغة حالياً</p>
+      </div>
+
+      <div id="cartForm" class="pt-3 border-t border-slate-800 space-y-2.5 text-xs">
+        <h5 class="text-neonGreen font-black">بيانات الاستلام والتوصيل:</h5>
+        <input type="text" id="custName" placeholder="الاسم الثلاثي *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-white">
+        <input type="tel" id="custPhone" placeholder="رقم الهاتف للتواصل *" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-white">
+        <select id="custZone" onchange="renderCartTotals()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-white">
+          <!-- Populated dynamically via JS -->
+        </select>
+        <textarea id="custNotes" rows="2" placeholder="العنوان الدقيق وملاحظات التركيب..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-white"></textarea>
+      </div>
+    </div>
+
+    <div id="cartFooter" class="p-4 border-t border-slate-800 bg-slate-950 space-y-2.5">
+      <div class="flex justify-between items-baseline text-xs">
+        <span class="text-slate-400">الإجمالي النهائي:</span>
+        <div class="text-left">
+          <div id="cartGrandTotalSYP" class="text-neonGreen text-lg font-black">0 ل.س</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button onclick="exportWhatsAppOrder()" class="py-2.5 bg-neonGreen hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-xs flex items-center justify-center gap-1 shadow-md">
+          <i class="fa-brands fa-whatsapp text-sm"></i>
+          <span>تأكيد عبر واتساب</span>
+        </button>
+        <button onclick="printOrderInvoice()" class="py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1">
+          <i class="fa-solid fa-print text-xs"></i>
+          <span>طباعة فاتورة</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-slate-950 border-t border-slate-800/80 py-6 text-xs text-slate-400 mt-10">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-neonGreen"></span>
+        <span class="font-bold text-white">TECHNO E Servis</span>
+        <span>- دمشق، المزة جبل، فيلات متصلة، بناء 27</span>
+      </div>
+      <div>هاتف وواتساب: <span dir="ltr" class="text-neonLime font-bold">0992668807</span></div>
+    </div>
+  </footer>
+
+  <!-- ================= JAVASCRIPT APPLICATION LOGIC ================= -->
+  <script>
+    const DEFAULT_CATEGORIES = [
+      "إنفرترات",
+      "بطاريات",
+      "لمبات إنارة",
+      "وصلات وكابلات",
+      "قواطع وحماية",
+      "صيانة وتجهيز"
+    ];
+
+    const DEFAULT_PRODUCTS = [
+      {
+        id: "p1",
+        name: "إنفرتر هجين Bison 4.5kW شمسي Pure Sine",
+        brand: "Bison Power",
+        category: "إنفرترات",
+        priceSYP: 4850000,
+        inStock: true,
+        image: "",
+        icon: "fa-microchip",
+        voltage: "24V DC / 220V AC",
+        power: "4500W نقي 100%",
+        charger: "MPPT 100A شمسي",
+        warranty: "كفالة تجربة وصيانة 6 أشهر",
+        description: "شاشة ملونة، إقلاع فوري للأحمال الحثية ومكيفات الإنفرتر، بورد ياباني مكثف."
+      },
+      {
+        id: "p2",
+        name: "بطارية ليثيوم 24V 100Ah جدارية BMS ذكي",
+        brand: "Felicity Solar",
+        category: "بطاريات",
+        priceSYP: 7200000,
+        inStock: true,
+        image: "",
+        icon: "fa-car-battery",
+        voltage: "25.6V Nominal",
+        power: "2.56 kWh تخزين",
+        charger: "شحن سريع حتى 50A",
+        warranty: "كفالة 3 سنوات حقيقية",
+        description: "خلايا LiFePO4 آمنة ضد الحريق، عمر افتراضي يتجاوز 4000 دورة تفريغ عميق."
+      },
+      {
+        id: "p3",
+        name: "لمبة ليد 12 فولت 18 واط إضاءة بيضاء قوية",
+        brand: "Philips LED",
+        category: "لمبات إنارة",
+        priceSYP: 35000,
+        inStock: true,
+        image: "",
+        icon: "fa-lightbulb",
+        voltage: "12V DC مباشر",
+        power: "18W توفير طاقة",
+        charger: "ملاقط بطارية / قاعدة E27",
+        warranty: "كفالة تبديل فوري",
+        description: "إضاءة ناصعة بدون رفة، استهلاك منخفض جداً للبطارية مع كبل وملاقط جاهزة."
+      },
+      {
+        id: "p4",
+        name: "لمبة طوارئ شحن مع بطارية ليثيوم داخلية",
+        brand: "Osram",
+        category: "لمبات إنارة",
+        priceSYP: 55000,
+        inStock: true,
+        image: "",
+        icon: "fa-lightbulb",
+        voltage: "220V AC + بطارية",
+        power: "15W تعمل 4 ساعات",
+        charger: "شحن تلقائي مع الكهرباء",
+        warranty: "مكفولة",
+        description: "تعمل تلقائياً عند انقطاع التيار الكهربائي وتُشحن عند عودة الكهرباء."
+      },
+      {
+        id: "p5",
+        name: "كبل بطارية نحاس صافي مرن 25 مم (المتر)",
+        brand: "كابلات دمشق",
+        category: "وصلات وكابلات",
+        priceSYP: 65000,
+        inStock: true,
+        image: "",
+        icon: "fa-plug",
+        voltage: "عزل حراري مزدوج",
+        power: "مقطع 25mm نحاس 100%",
+        charger: "مقاومة حرارة عالية",
+        warranty: "نحاس أحمر مكفول",
+        description: "كبل توصيل بين البطارية والإنفرتر لضمان عدم هبوط الجهد أو سخونة الأسلاك."
+      },
+      {
+        id: "p6",
+        name: "قاطع تحويل أوتوماتيكي ATS ثنائي 63A",
+        brand: "TOMZN",
+        category: "قواطع وحماية",
+        priceSYP: 440000,
+        inStock: true,
+        image: "",
+        icon: "fa-shield-halved",
+        voltage: "220V AC 50Hz",
+        power: "تحمل 63A مستمر",
+        charger: "استجابة < 50ms",
+        warranty: "كفالة تجربة وفحص",
+        description: "قلاب ذكي فوري بين خط المدينة والإنفرتر دون إعادة تشغيل الراوتر أو الكمبيوتر."
+      },
+      {
+        id: "p7",
+        name: "تجديد وصيانة شاملة لبورد إنفرتر عاطل",
+        brand: "ورشة Techno E",
+        category: "صيانة وتجهيز",
+        priceSYP: 550000,
+        inStock: true,
+        image: "",
+        icon: "fa-screwdriver-wrench",
+        voltage: "كافة الفولتيات 12/24/48V",
+        power: "فحص على بنك أحمال حقيقي",
+        charger: "معايرة دارة الشحن",
+        warranty: "كفالة صيانة 3 أشهر",
+        description: "تبديل موسفيتات أصلية، غسيل كيميائي، معجون تبريد ذهبي واختبار إجهاد 100%."
+      }
+    ];
+
+    let categories = JSON.parse(localStorage.getItem('tekno_syp_cats')) || DEFAULT_CATEGORIES;
+    let products = JSON.parse(localStorage.getItem('tekno_syp_prods')) || DEFAULT_PRODUCTS;
+    let shopPhone = localStorage.getItem('tekno_syp_phone') || "963992668807";
+    let adminPin = localStorage.getItem('tekno_syp_pin') || "7788";
+    let cart = JSON.parse(localStorage.getItem('tekno_syp_cart')) || [];
+    
+    const DEFAULT_DELIVERY_ZONES = [
+      { id: "z_damascus", name: "توصيل داخل دمشق", fee: 35000 },
+      { id: "z_gov", name: "شحن للمحافظات بولمان", fee: 90000 }
+    ];
+    let deliveryZones = JSON.parse(localStorage.getItem('tekno_syp_zones')) || DEFAULT_DELIVERY_ZONES;
+
+    let activeCategory = "all";
+    let searchQuery = "";
+    let onlyInStock = false;
+    let isAdminLoggedIn = false;
+
+    function formatSYP(amount) {
+      return Math.round(amount).toLocaleString('en-US') + " ل.س";
+    }
+
+    function saveStorage() {
+      try {
+        localStorage.setItem('tekno_syp_cats', JSON.stringify(categories));
+        localStorage.setItem('tekno_syp_prods', JSON.stringify(products));
+        localStorage.setItem('tekno_syp_phone', shopPhone);
+        localStorage.setItem('tekno_syp_pin', adminPin);
+        localStorage.setItem('tekno_syp_cart', JSON.stringify(cart));
+        localStorage.setItem('tekno_syp_zones', JSON.stringify(deliveryZones));
+      } catch (e) {
+        showToast("تنبيه: مساحة التخزين ممتلئة، حاول حذف بعض الصور القديمة", "error");
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('adminPhoneInput').value = shopPhone;
+      renderAdminDeliveryZones();
+      renderDeliverySelect();
+      renderCategoryTabs();
+      renderStore();
+      updateCartBadge();
+    });
+
+    function renderAdminDeliveryZones() {
+      const container = document.getElementById('adminDeliveryZonesList');
+      if (!container) return;
+      container.innerHTML = deliveryZones.map(z => `
+        <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex items-center justify-between gap-2 text-xs">
+          <div class="flex-1 min-w-0">
+            <div class="font-bold text-white truncate mb-1">${z.name}</div>
+            <div class="flex items-center gap-1">
+              <input 
+                type="number" 
+                step="1000" 
+                value="${z.fee}" 
+                onchange="updateZoneFee('${z.id}', this.value)" 
+                class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs text-neonGreen font-bold focus:outline-none focus:border-neonGreen"
+              />
+              <span class="text-[10px] text-slate-400">ل.س</span>
+            </div>
+          </div>
+          <button onclick="deleteDeliveryZone('${z.id}')" class="p-2 bg-slate-800 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors" title="حذف المنطقة">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function addDeliveryZone() {
+      const nameInput = document.getElementById('newZoneNameInput');
+      const feeInput = document.getElementById('newZoneFeeInput');
+      const name = nameInput.value.trim();
+      const fee = parseFloat(feeInput.value);
+
+      if (!name) {
+        showToast("يرجى إدخال اسم المنطقة", "error");
+        return;
+      }
+      if (isNaN(fee) || fee < 0) {
+        showToast("يرجى إدخال أجرة توصيل صحيحة", "error");
+        return;
+      }
+
+      deliveryZones.push({
+        id: "z_" + Date.now(),
+        name: name,
+        fee: fee
+      });
+
+      nameInput.value = "";
+      feeInput.value = "";
+      saveStorage();
+      renderAdminDeliveryZones();
+      renderDeliverySelect();
+      showToast(`تمت إضافة منطقة "${name}" بنجاح`, "success");
+    }
+
+    function updateZoneFee(id, val) {
+      const fee = parseFloat(val);
+      if (isNaN(fee) || fee < 0) {
+        showToast("يرجى إدخال رقم صحيح", "error");
+        return;
+      }
+      const zone = deliveryZones.find(z => z.id === id);
+      if (zone) {
+        zone.fee = fee;
+        saveStorage();
+        renderDeliverySelect();
+        renderCartTotals();
+        showToast(`تم تعديل أجرة "${zone.name}" إلى ${formatSYP(fee)}`, "success");
+      }
+    }
+
+    function deleteDeliveryZone(id) {
+      deliveryZones = deliveryZones.filter(z => z.id !== id);
+      saveStorage();
+      renderAdminDeliveryZones();
+      renderDeliverySelect();
+      renderCartTotals();
+      showToast("تم حذف المنطقة");
+    }
+
+    function renderDeliverySelect() {
+      const sel = document.getElementById('custZone');
+      if (!sel) return;
+      const currentVal = sel.value;
+      
+      let optionsHtml = `<option value="0">استلام مباشر من المحل بالمزة (مجاناً)</option>`;
+      optionsHtml += deliveryZones.map(z => 
+        `<option value="${z.fee}">${z.name} (${formatSYP(z.fee)})</option>`
+      ).join('');
+      
+      sel.innerHTML = optionsHtml;
+      
+      const validFees = ["0", ...deliveryZones.map(z => String(z.fee))];
+      if (validFees.includes(currentVal)) {
+        sel.value = currentVal;
+      } else {
+        sel.value = "0";
+      }
+    }
+
+    /* Dynamic Categories Rendering */
+    function renderCategoryTabs() {
+      const container = document.getElementById('categoryTabsContainer');
+      let html = `
+        <button onclick="filterCategory('all')" class="cat-pill px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${activeCategory === 'all' ? 'bg-neonGreen text-slate-950 shadow' : 'bg-cardBg text-slate-300 border border-slate-800 hover:bg-slate-800'}">
+          الكل (${products.length})
+        </button>
+      `;
+
+      categories.forEach(cat => {
+        const count = products.filter(p => p.category === cat).length;
+        const isActive = activeCategory === cat;
+        html += `
+          <button onclick="filterCategory('${cat}')" class="cat-pill px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${isActive ? 'bg-neonGreen text-slate-950 shadow' : 'bg-cardBg text-slate-300 border border-slate-800 hover:bg-slate-800'}">
+            ${cat} <span class="opacity-75 text-[10px]">(${count})</span>
+          </button>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function filterCategory(cat) {
+      activeCategory = cat;
+      renderCategoryTabs();
+      renderStore();
+    }
+
+    /* Store Rendering */
+    function renderStore() {
+      const grid = document.getElementById('productsGrid');
+      const noFound = document.getElementById('noProductsFound');
+
+      const filtered = products.filter(p => {
+        const catMatch = activeCategory === 'all' || p.category === activeCategory;
+        const searchMatch = p.name.toLowerCase().includes(searchQuery) ||
+                            (p.brand && p.brand.toLowerCase().includes(searchQuery)) ||
+                            (p.category && p.category.toLowerCase().includes(searchQuery)) ||
+                            (p.description && p.description.toLowerCase().includes(searchQuery));
+        const stockMatch = !onlyInStock || p.inStock;
+        return catMatch && searchMatch && stockMatch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        noFound.classList.remove('hidden');
+        return;
+      }
+      noFound.classList.add('hidden');
+
+      grid.innerHTML = filtered.map(prod => {
+        const hasCustomImg = prod.image && prod.image.trim().length > 0;
+        const formattedPrice = formatSYP(prod.priceSYP);
+
+        return `
+          <div class="bg-cardBg border border-slate-800 hover:border-slate-700 rounded-3xl p-4 flex flex-col justify-between transition-all duration-200">
+            <div>
+              <!-- Top Badges: Category + Brand -->
+              <div class="flex items-center justify-between gap-1.5 mb-2.5 flex-wrap">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-800">${prod.category}</span>
+                  ${prod.brand ? `
+                    <span class="text-[10px] font-black px-2 py-0.5 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center gap-1">
+                      <i class="fa-solid fa-tag text-[9px]"></i>
+                      ${prod.brand}
+                    </span>
+                  ` : ''}
+                </div>
+
+                ${prod.inStock ? `
+                  <span class="text-[10px] font-black text-neonGreen bg-neonGreen/10 border border-neonGreen/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-neonGreen animate-pulse"></span>
+                    متوفر
+                  </span>
+                ` : `
+                  <span class="text-[10px] font-bold text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-full">
+                    غير متوفر
+                  </span>
+                `}
+              </div>
+
+              <!-- Image Container -->
+              <div class="h-44 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 flex items-center justify-center relative overflow-hidden mb-3">
+                ${hasCustomImg ? `
+                  <img src="${prod.image}" alt="${prod.name}" class="w-full h-full object-contain p-1.5 rounded-2xl" />
+                ` : `
+                  <i class="fa-solid ${prod.icon || 'fa-bolt'} text-4xl text-neonGreen"></i>
+                `}
+                <span class="absolute bottom-1.5 left-2 text-[8px] font-tech text-slate-400 bg-black/70 px-1.5 py-0.5 rounded tracking-wider">TECHNO E</span>
+              </div>
+
+              <h3 class="text-sm font-black text-white leading-snug">${prod.name}</h3>
+              <p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${prod.description || 'معدات أصلية مفحوصة ومكفولة داخل مركزنا.'}</p>
+
+              <!-- Technical Specs -->
+              <div class="mt-3 rounded-xl bg-slate-900/90 border border-slate-800/80 p-2.5 space-y-1.5 text-[11px]">
+                ${prod.brand ? `
+                <div class="flex justify-between border-b border-slate-800/60 pb-1">
+                  <span class="text-slate-400">🏭 الشركة / الماركة:</span>
+                  <span class="font-bold text-amber-300">${prod.brand}</span>
+                </div>` : ''}
+                ${prod.voltage ? `
+                <div class="flex justify-between border-b border-slate-800/60 pb-1">
+                  <span class="text-slate-400">⚡ الجهد / الدخل:</span>
+                  <span class="font-bold text-white">${prod.voltage}</span>
+                </div>` : ''}
+                ${prod.power ? `
+                <div class="flex justify-between border-b border-slate-800/60 pb-1">
+                  <span class="text-slate-400">📊 الاستطاعة / القياس:</span>
+                  <span class="font-bold text-white">${prod.power}</span>
+                </div>` : ''}
+                ${prod.warranty ? `
+                <div class="flex justify-between pt-0.5">
+                  <span class="text-slate-400">🛡️ الضمان:</span>
+                  <span class="font-bold text-neonGreen">${prod.warranty}</span>
+                </div>` : ''}
+              </div>
+            </div>
+
+            <!-- Price (SYP ONLY) & Add Button -->
+            <div class="pt-3 mt-3 border-t border-slate-800">
+              <div class="flex items-center justify-between mb-2.5">
+                <div class="text-lg font-black text-neonGreen">
+                  ${formattedPrice}
+                </div>
+                <span class="text-[10px] text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">السعر النهائي</span>
+              </div>
+
+              ${prod.inStock ? `
+                <button onclick="addToCart('${prod.id}')" class="w-full py-2.5 rounded-xl bg-neonGreen hover:bg-emerald-400 active:scale-95 text-slate-950 font-black text-xs transition-all flex items-center justify-center gap-1.5 shadow-md">
+                  <i class="fa-solid fa-cart-plus"></i>
+                  <span>إضافة إلى السلة</span>
+                </button>
+              ` : `
+                <button disabled class="w-full py-2.5 rounded-xl bg-slate-900 text-slate-500 font-bold text-xs border border-slate-800 cursor-not-allowed">
+                  القطعة غير متوفرة حالياً
+                </button>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function handleSearch(val) {
+      searchQuery = val.trim().toLowerCase();
+      renderStore();
+    }
+
+    function toggleStockFilter(val) {
+      onlyInStock = val;
+      renderStore();
+    }
+
+    /* Cart Operations (SYP ONLY) */
+    function addToCart(id) {
+      const prod = products.find(p => p.id === id);
+      if (!prod || !prod.inStock) return;
+
+      const item = cart.find(i => i.id === id);
+      if (item) {
+        item.qty += 1;
+      } else {
+        cart.push({ id: prod.id, name: prod.name, brand: prod.brand || '', priceSYP: prod.priceSYP, qty: 1 });
+      }
+      saveStorage();
+      updateCartBadge();
+      showToast(`تمت إضافة "${prod.name}" للسلة`, "success");
+    }
+
+    function updateCartBadge() {
+      const count = cart.reduce((sum, i) => sum + i.qty, 0);
+      document.getElementById('cartCountBadge').textContent = count;
+    }
+
+    function openCart() {
+      renderDeliverySelect();
+      renderCartDrawer();
+      document.getElementById('cartBackdrop').classList.remove('hidden');
+      document.getElementById('cartDrawer').classList.remove('-translate-x-full');
+    }
+
+    function closeCart() {
+      document.getElementById('cartDrawer').classList.add('-translate-x-full');
+      setTimeout(() => {
+        document.getElementById('cartBackdrop').classList.add('hidden');
+      }, 250);
+    }
+
+    function changeCartQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+      saveStorage();
+      updateCartBadge();
+      renderCartDrawer();
+    }
+
+    function renderCartDrawer() {
+      const container = document.getElementById('cartItemsContainer');
+      const empty = document.getElementById('emptyCartNotice');
+      const form = document.getElementById('cartForm');
+      const footer = document.getElementById('cartFooter');
+
+      if (cart.length === 0) {
+        container.innerHTML = "";
+        empty.classList.remove('hidden');
+        form.classList.add('hidden');
+        footer.classList.add('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      form.classList.remove('hidden');
+      footer.classList.remove('hidden');
+
+      container.innerHTML = cart.map(i => `
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between text-xs">
+          <div class="flex-1 min-w-0">
+            <div class="font-bold text-white truncate">${i.name}</div>
+            ${i.brand ? `<div class="text-[10px] text-amber-400">الشركة: ${i.brand}</div>` : ''}
+            <div class="text-[11px] text-neonGreen font-semibold mt-0.5">${formatSYP(i.priceSYP)} × ${i.qty} = ${formatSYP(i.priceSYP * i.qty)}</div>
+          </div>
+          <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800 mr-2">
+            <button onclick="changeCartQty('${i.id}', -1)" class="w-5 h-5 bg-slate-800 rounded flex items-center justify-center font-bold">-</button>
+            <span class="w-4 text-center font-bold text-white">${i.qty}</span>
+            <button onclick="changeCartQty('${i.id}', 1)" class="w-5 h-5 bg-slate-800 rounded flex items-center justify-center font-bold">+</button>
+          </div>
+        </div>
+      `).join('');
+
+      renderCartTotals();
+    }
+
+    function renderCartTotals() {
+      const subtotalSYP = cart.reduce((sum, i) => sum + (i.priceSYP * i.qty), 0);
+      const deliverySYP = parseFloat(document.getElementById('custZone')?.value) || 0;
+      const totalSYP = subtotalSYP + deliverySYP;
+
+      document.getElementById('cartGrandTotalSYP').textContent = formatSYP(totalSYP);
+    }
+
+    function exportWhatsAppOrder() {
+      const name = document.getElementById('custName').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+      const notes = document.getElementById('custNotes').value.trim();
+      const zoneSel = document.getElementById('custZone');
+      const zoneText = zoneSel.options[zoneSel.selectedIndex].text;
+      const deliverySYP = parseFloat(zoneSel.value) || 0;
+
+      if (!name || !phone) {
+        showToast("يرجى كتابة الاسم ورقم الهاتف لإتمام الطلب", "error");
+        return;
+      }
+
+      const subtotalSYP = cart.reduce((sum, i) => sum + (i.priceSYP * i.qty), 0);
+      const totalSYP = subtotalSYP + deliverySYP;
+
+      let msg = `⚡ *طلب شراء جديد - TECHNO E Servis*\n`;
+      msg += `📍 *الفرع:* دمشق - المزة جبل - بناء 27\n`;
+      msg += `━━━━━━━━━━━━━━━━━━━\n`;
+      msg += `👤 *العميل:* ${name}\n`;
+      msg += `📞 *الهاتف:* ${phone}\n`;
+      msg += `🚚 *التوصيل:* ${zoneText}\n`;
+      if (notes) msg += `📝 *ملاحظات:* ${notes}\n`;
+      msg += `━━━━━━━━━━━━━━━━━━━\n`;
+      msg += `📦 *القطع المطلوبة:*\n`;
+
+      cart.forEach((i, idx) => {
+        const brandStr = i.brand ? ` [${i.brand}]` : '';
+        msg += `${idx + 1}. ${i.name}${brandStr} (${i.qty}x) = ${formatSYP(i.priceSYP * i.qty)}\n`;
+      });
+
+      msg += `━━━━━━━━━━━━━━━━━━━\n`;
+      msg += `💰 *المجموع النهائي:* *${formatSYP(totalSYP)}*\n`;
+
+      cart = [];
+      saveStorage();
+      updateCartBadge();
+      closeCart();
+      window.open(`https://wa.me/${shopPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function printOrderInvoice() {
+      const name = document.getElementById('custName').value.trim() || 'عميل محترم';
+      const phone = document.getElementById('custPhone').value.trim() || '-';
+      const subtotalSYP = cart.reduce((sum, i) => sum + (i.priceSYP * i.qty), 0);
+      const deliverySYP = parseFloat(document.getElementById('custZone')?.value) || 0;
+      const totalSYP = subtotalSYP + deliverySYP;
+
+      const win = window.open('', '_blank');
+      win.document.write(`
+        <html dir="rtl">
+        <head>
+          <title>فاتورة مبيع - Techno E Servis</title>
+          <style>
+            body { font-family: Tahoma, sans-serif; padding: 25px; color: #111; }
+            table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: right; font-size: 13px; }
+            th { background: #f1f5f9; }
+          </style>
+        </head>
+        <body>
+          <h2>Techno E Servis | أنظمة طاقة وإنفرترات وإنارة</h2>
+          <p>دمشق - المزة جبل - فيلات متصلة - بناء 27 | هاتف: 0992668807</p>
+          <hr>
+          <p><strong>العميل:</strong> ${name} | <strong>الهاتف:</strong> ${phone}</p>
+          <table>
+            <thead>
+              <tr><th>#</th><th>القطعة</th><th>الشركة</th><th>الكمية</th><th>السعر (ل.س)</th><th>الإجمالي (ل.س)</th></tr>
+            </thead>
+            <tbody>
+              ${cart.map((i, idx) => `
+                <tr><td>${idx+1}</td><td>${i.name}</td><td>${i.brand || '-'}</td><td>${i.qty}</td><td>${formatSYP(i.priceSYP)}</td><td>${formatSYP(i.priceSYP * i.qty)}</td></tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <h3 style="text-align:left; color:#16a34a; margin-top:20px;">المجموع النهائي: ${formatSYP(totalSYP)}</h3>
+          <script>window.onload = function(){ window.print(); }<\/script>
+        </body>
+        </html>
+      `);
+      win.document.close();
+    }
+
+    /* Admin Operations */
+    function handleAdminButtonClick() {
+      if (document.getElementById('adminView').classList.contains('hidden')) {
+        if (isAdminLoggedIn) {
+          switchView('admin');
+        } else {
+          openPinModal();
+        }
+      } else {
+        switchView('store');
+      }
+    }
+
+    function openPinModal() {
+      document.getElementById('pinError').classList.add('hidden');
+      document.getElementById('pinInput').value = "";
+      document.getElementById('pinModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('pinInput').focus(), 100);
+    }
+
+    function closePinModal() {
+      document.getElementById('pinModal').classList.add('hidden');
+    }
+
+    function confirmPin() {
+      const val = document.getElementById('pinInput').value.trim();
+      if (val === adminPin) {
+        isAdminLoggedIn = true;
+        closePinModal();
+        switchView('admin');
+        showToast("أهلاً بك في لوحة تحكم المحل", "success");
+      } else {
+        document.getElementById('pinError').classList.remove('hidden');
+      }
+    }
+
+    function logoutAdmin() {
+      isAdminLoggedIn = false;
+      switchView('store');
+      showToast("تم تسجيل الخروج والعودة لوضع الزبون");
+    }
+
+    function switchView(view) {
+      if (view === 'admin') {
+        document.getElementById('storeView').classList.add('hidden');
+        document.getElementById('adminView').classList.remove('hidden');
+        document.getElementById('adminBtnText').textContent = "عرض المتجر";
+        document.getElementById('adminLockIcon').className = "fa-solid fa-shop text-neonGreen";
+        renderAdminDeliveryZones();
+        renderAdminCategoriesList();
+        renderAdminTable();
+      } else {
+        document.getElementById('storeView').classList.remove('hidden');
+        document.getElementById('adminView').classList.add('hidden');
+        document.getElementById('adminBtnText').textContent = "لوحة الإدارة";
+        document.getElementById('adminLockIcon').className = isAdminLoggedIn ? "fa-solid fa-sliders text-neonGreen" : "fa-solid fa-lock text-neonGreen";
+        renderCategoryTabs();
+        renderStore();
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* Dynamic Category Management in Admin */
+    function renderAdminCategoriesList() {
+      const list = document.getElementById('adminCategoriesList');
+      list.innerHTML = categories.map(cat => `
+        <div class="inline-flex items-center gap-2 bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-xl text-xs text-white">
+          <span class="font-bold">${cat}</span>
+          <button onclick="deleteCategory('${cat}')" class="text-red-400 hover:text-red-300 text-xs" title="حذف الصنف">
+            <i class="fa-solid fa-circle-xmark"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function addNewCategory() {
+      const input = document.getElementById('newCategoryNameInput');
+      const newCat = input.value.trim();
+      if (!newCat) return;
+
+      if (categories.includes(newCat)) {
+        showToast("هذا الصنف موجود مسبقاً!", "error");
+        return;
+      }
+
+      categories.push(newCat);
+      saveStorage();
+      input.value = "";
+      renderAdminCategoriesList();
+      renderCategoryTabs();
+      showToast(`تمت إضافة صنف "${newCat}" بنجاح`, "success");
+    }
+
+    function deleteCategory(catName) {
+      if (categories.length <= 1) {
+        showToast("يجب بقاء صنف واحد على الأقل", "error");
+        return;
+      }
+      categories = categories.filter(c => c !== catName);
+      if (activeCategory === catName) activeCategory = 'all';
+      saveStorage();
+      renderAdminCategoriesList();
+      renderCategoryTabs();
+      showToast(`تم حذف الصنف "${catName}"`);
+    }
+
+    function populateCategorySelect(selectedCat = "") {
+      const sel = document.getElementById('pCategory');
+      sel.innerHTML = categories.map(c => `
+        <option value="${c}" ${c === selectedCat ? 'selected' : ''}>${c}</option>
+      `).join('');
+    }
+
+    function renderAdminTable() {
+      const tbody = document.getElementById('adminTableBody');
+      tbody.innerHTML = products.map(p => {
+        const hasImg = p.image && p.image.trim().length > 0;
+
+        return `
+          <tr class="hover:bg-slate-900/60">
+            <td class="py-2.5 px-3 font-bold text-white flex items-center gap-2">
+              <div class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0">
+                ${hasImg ? `<img src="${p.image}" class="w-full h-full object-cover">` : `<i class="fa-solid ${p.icon || 'fa-bolt'} text-neonGreen text-xs"></i>`}
+              </div>
+              <span class="truncate max-w-[160px]">${p.name}</span>
+            </td>
+            <td class="py-2.5 px-3 text-amber-300 font-semibold">${p.brand || '-'}</td>
+            <td class="py-2.5 px-3 text-slate-300">${p.category}</td>
+            <td class="py-2.5 px-3">
+              <div class="flex items-center gap-1">
+                <input 
+                  type="number" 
+                  step="500" 
+                  value="${p.priceSYP}" 
+                  onchange="quickPriceEdit('${p.id}', this.value)" 
+                  class="w-24 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-neonGreen font-bold"
+                />
+                <span class="text-[10px] text-slate-400">ل.س</span>
+              </div>
+            </td>
+            <td class="py-2.5 px-3 text-center">
+              <button 
+                onclick="toggleStock('${p.id}')"
+                class="px-2.5 py-1 rounded-lg text-[10px] font-black ${p.inStock ? 'bg-neonGreen/15 text-neonGreen border border-neonGreen/30' : 'bg-red-500/15 text-red-400 border border-red-500/30'}"
+              >
+                ${p.inStock ? 'متوفر' : 'غير متوفر'}
+              </button>
+            </td>
+            <td class="py-2.5 px-3 text-center">
+              <div class="flex items-center justify-center gap-2">
+                <button onclick="editProductModal('${p.id}')" class="p-1.5 bg-slate-800 rounded-lg text-cyan-400 hover:text-white" title="تعديل"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button onclick="deleteProduct('${p.id}')" class="p-1.5 bg-slate-800 rounded-lg text-red-400 hover:text-white" title="حذف"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function quickPriceEdit(id, val) {
+      const p = parseFloat(val);
+      if (!isNaN(p) && p >= 0) {
+        const item = products.find(x => x.id === id);
+        if (item) {
+          item.priceSYP = p;
+          saveStorage();
+          showToast(`تم تعديل السعر إلى ${formatSYP(p)}`, "success");
+        }
+      }
+    }
+
+    function toggleStock(id) {
+      const item = products.find(x => x.id === id);
+      if (item) {
+        item.inStock = !item.inStock;
+        saveStorage();
+        renderAdminTable();
+        showToast(`حالة "${item.name}": ${item.inStock ? 'متوفر' : 'غير متوفر'}`);
+      }
+    }
+
+    function deleteProduct(id) {
+      products = products.filter(x => x.id !== id);
+      saveStorage();
+      renderAdminTable();
+      renderCategoryTabs();
+      showToast("تم حذف القطعة من المخزون", "error");
+    }
+
+    function saveAdminPhone() {
+      const val = document.getElementById('adminPhoneInput').value.trim().replace('+', '');
+      if (val.length > 5) {
+        shopPhone = val;
+        saveStorage();
+        showToast("تم تحديث رقم واتساب المتجر", "success");
+      }
+    }
+
+    function saveAdminPin() {
+      const val = document.getElementById('adminNewPinInput').value.trim();
+      if (val.length >= 4) {
+        adminPin = val;
+        saveStorage();
+        document.getElementById('adminNewPinInput').value = "";
+        showToast("تم تحديث رمز الحماية السري بنجاح", "success");
+      } else {
+        showToast("يجب أن يتكون الرمز من 4 أرقام على الأقل", "error");
+      }
+    }
+
+    /* Camera & Gallery Image Processing */
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 650;
+
+          if (width > height) {
+            if (width > maxDim) {
+              height *= maxDim / width;
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width *= maxDim / height;
+              height = maxDim;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.78);
+          setImagePreview(compressedBase64);
+          showToast("تم تجهيز الصورة بنجاح", "success");
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function setImagePreview(base64Url) {
+      const preview = document.getElementById('imagePreview');
+      const placeholder = document.getElementById('imagePlaceholderIcon');
+      const hiddenInput = document.getElementById('pCustomImageBase64');
+      const removeBtn = document.getElementById('removeImgBtn');
+
+      if (base64Url && base64Url.length > 0) {
+        preview.src = base64Url;
+        preview.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+        hiddenInput.value = base64Url;
+        removeBtn.classList.remove('hidden');
+      } else {
+        preview.src = "";
+        preview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        hiddenInput.value = "";
+        removeBtn.classList.add('hidden');
+        document.getElementById('cameraCaptureInput').value = "";
+        document.getElementById('galleryFileInput').value = "";
+      }
+    }
+
+    function removeUploadedImage() {
+      setImagePreview("");
+    }
+
+    function openProductModal() {
+      document.getElementById('prodModalTitle').textContent = "إضافة قطعة جديدة إلى Techno E Servis";
+      document.getElementById('editProdId').value = "";
+      document.getElementById('pName').value = "";
+      document.getElementById('pBrand').value = "";
+      populateCategorySelect(categories[0] || "إنفرترات");
+      document.getElementById('pPriceSYP').value = "";
+      document.getElementById('pVoltage').value = "";
+      document.getElementById('pPower').value = "";
+      document.getElementById('pCharger').value = "";
+      document.getElementById('pWarranty').value = "كفالة تجربة وصيانة";
+      document.getElementById('pInStock').value = "true";
+      document.getElementById('pIcon').value = "fa-microchip";
+      document.getElementById('pDesc').value = "";
+      setImagePreview("");
+      document.getElementById('productModal').classList.remove('hidden');
+    }
+
+    function editProductModal(id) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+      document.getElementById('prodModalTitle').textContent = `تعديل: ${p.name}`;
+      document.getElementById('editProdId').value = p.id;
+      document.getElementById('pName').value = p.name;
+      document.getElementById('pBrand').value = p.brand || "";
+      populateCategorySelect(p.category);
+      document.getElementById('pPriceSYP').value = p.priceSYP;
+      document.getElementById('pVoltage').value = p.voltage || "";
+      document.getElementById('pPower').value = p.power || "";
+      document.getElementById('pCharger').value = p.charger || "";
+      document.getElementById('pWarranty').value = p.warranty || "";
+      document.getElementById('pInStock').value = p.inStock ? "true" : "false";
+      document.getElementById('pIcon').value = p.icon || "fa-microchip";
+      document.getElementById('pDesc').value = p.description || "";
+      setImagePreview(p.image || "");
+      document.getElementById('productModal').classList.remove('hidden');
+    }
+
+    function closeProductModal() {
+      document.getElementById('productModal').classList.add('hidden');
+    }
+
+    function handleProductSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('editProdId').value;
+      const name = document.getElementById('pName').value.trim();
+      const brand = document.getElementById('pBrand').value.trim();
+      const category = document.getElementById('pCategory').value;
+      const priceSYP = parseFloat(document.getElementById('pPriceSYP').value);
+      const voltage = document.getElementById('pVoltage').value.trim();
+      const power = document.getElementById('pPower').value.trim();
+      const charger = document.getElementById('pCharger').value.trim();
+      const warranty = document.getElementById('pWarranty').value.trim();
+      const inStock = document.getElementById('pInStock').value === "true";
+      const icon = document.getElementById('pIcon').value;
+      const description = document.getElementById('pDesc').value.trim();
+      const image = document.getElementById('pCustomImageBase64').value;
+
+      if (!name || isNaN(priceSYP)) return;
+
+      if (id) {
+        const idx = products.findIndex(x => x.id === id);
+        if (idx !== -1) {
+          products[idx] = { ...products[idx], name, brand, category, priceSYP, voltage, power, charger, warranty, inStock, icon, description, image };
+          showToast("تم تحديث بيانات القطعة والصورة", "success");
+        }
+      } else {
+        products.unshift({
+          id: "p_" + Date.now(),
+          name, brand, category, priceSYP, voltage, power, charger, warranty, inStock, icon, description, image
+        });
+        showToast("تمت إضافة القطعة بنجاح", "success");
+      }
+
+      saveStorage();
+      closeProductModal();
+      renderAdminTable();
+      renderCategoryTabs();
+    }
+
+    function openCalcModal() {
+      calcSystem();
+      document.getElementById('calcModal').classList.remove('hidden');
+    }
+    function closeCalcModal() {
+      document.getElementById('calcModal').classList.add('hidden');
+    }
+
+    function calcSystem() {
+      const lights = document.getElementById('loadLight').checked;
+      const fridge = document.getElementById('loadFridge').checked;
+      const fan = document.getElementById('loadFan').checked;
+      const pump = document.getElementById('loadPump').checked;
+
+      let w = 0;
+      if (lights) w += 250;
+      if (fridge) w += 400;
+      if (fan) w += 600;
+      if (pump) w += 800;
+
+      if (w > 1200) {
+        document.getElementById('recInvLabel').textContent = "إنفرتر هجين 5.5kW (48V) بيور ساين";
+        document.getElementById('recBatLabel').textContent = "بطارية ليثيوم 48V 100Ah أو 4 بطاريات جل 200Ah";
+      } else if (w <= 300) {
+        document.getElementById('recInvLabel').textContent = "إنفرتر 1.5kW إلى 2.2kW (12V أو 24V)";
+        document.getElementById('recBatLabel').textContent = "بطارية تيوبلر أو جل 150Ah إلى 200Ah";
+      } else {
+        document.getElementById('recInvLabel').textContent = "إنفرتر هجين 3.2kW (24V) بيور ساين";
+        document.getElementById('recBatLabel').textContent = "2x بطارية 150Ah أو ليثيوم 24V 100Ah";
+      }
+    }
+
+    function sendCalculatedSystemWhatsApp() {
+      const inv = document.getElementById('recInvLabel').textContent;
+      const bat = document.getElementById('recBatLabel').textContent;
+      let text = `⚡ *طلب عرض سعر منظومة طاقة (من حاسبة الموقع):*\n`;
+      text += `🔹 *الإنفرتر المقترح:* ${inv}\n`;
+      text += `🔹 *البطاريات المقترحة:* ${bat}\n`;
+      text += `أرجو تزويدي بالأسعار المتوفرة عندكم في فرع المزة بالليرة السورية.`;
+      closeCalcModal();
+      window.open(`https://wa.me/${shopPhone}?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    let maintHasPhoto = false;
+
+    function openMaintModal() {
+      document.getElementById('maintModal').classList.remove('hidden');
+    }
+    function closeMaintModal() {
+      document.getElementById('maintModal').classList.add('hidden');
+    }
+
+    function handleMaintImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const preview = document.getElementById('maintImagePreview');
+        const placeholder = document.getElementById('maintImagePlaceholder');
+        const removeBtn = document.getElementById('removeMaintImgBtn');
+        const note = document.getElementById('maintPhotoNote');
+
+        preview.src = e.target.result;
+        preview.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+        removeBtn.classList.remove('hidden');
+        note.classList.remove('hidden');
+        maintHasPhoto = true;
+        showToast("تم إرفاق صورة العطل بنجاح", "success");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeMaintImage() {
+      const preview = document.getElementById('maintImagePreview');
+      const placeholder = document.getElementById('maintImagePlaceholder');
+      const removeBtn = document.getElementById('removeMaintImgBtn');
+      const note = document.getElementById('maintPhotoNote');
+
+      preview.src = "";
+      preview.classList.add('hidden');
+      placeholder.classList.remove('hidden');
+      removeBtn.classList.add('hidden');
+      note.classList.add('hidden');
+      document.getElementById('maintCameraInput').value = "";
+      document.getElementById('maintGalleryInput').value = "";
+      maintHasPhoto = false;
+    }
+
+    function sendMaintWhatsApp() {
+      const dev = document.getElementById('maintDevice').value.trim() || 'إنفرتر طاقة';
+      const fault = document.getElementById('maintFault').value.trim();
+      const client = document.getElementById('maintClient').value.trim();
+
+      if (!fault) {
+        showToast("يرجى كتابة وصف المشكلة أو العطل أولاً", "error");
+        return;
+      }
+
+      if (!client) {
+        showToast("يرجى كتابة الاسم ورقم الهاتف", "error");
+        return;
+      }
+
+      let text = `🛠️ *حجز صيانة إنفرتر - ورشة Techno E Servis*\n`;
+      text += `⚡ *الموديل:* ${dev}\n`;
+      text += `⚠️ *وصف المشكلة:* ${fault}\n`;
+      if (maintHasPhoto) {
+        text += `📸 *مرفق:* الزبون جهّز صورة للعطل/الشاشة (يرجى إرسالها في هذه المحادثة)\n`;
+      }
+      text += `👤 *العميل:* ${client}\n`;
+      text += `📍 *الفرع:* مزة جبل - بناء 27\n`;
+
+      closeMaintModal();
+      window.open(`https://wa.me/${shopPhone}?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    /* Toast Helper */
+    let toastTimer;
+    function showToast(msg, type = "info") {
+      const box = document.getElementById('toastBox');
+      const text = document.getElementById('toastMsg');
+      const icon = document.getElementById('toastIcon');
+
+      clearTimeout(toastTimer);
+      text.textContent = msg;
+
+      if (type === "success") {
+        icon.className = "w-7 h-7 rounded-lg bg-neonGreen/20 text-neonGreen flex items-center justify-center text-xs flex-shrink-0";
+        icon.innerHTML = `<i class="fa-solid fa-check"></i>`;
+      } else if (type === "error") {
+        icon.className = "w-7 h-7 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center text-xs flex-shrink-0";
+        icon.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+      } else {
+        icon.className = "w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs flex-shrink-0";
+        icon.innerHTML = `<i class="fa-solid fa-info"></i>`;
+      }
+
+      box.classList.remove('translate-y-28', 'opacity-0');
+      box.classList.add('translate-y-0', 'opacity-100');
+
+      toastTimer = setTimeout(() => {
+        box.classList.remove('translate-y-0', 'opacity-100');
+        box.classList.add('translate-y-28', 'opacity-0');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
