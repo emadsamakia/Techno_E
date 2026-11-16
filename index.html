@@ -246,6 +246,40 @@
         </div>
       </div>
 
+      <!-- SECRET USD EXCHANGE RATE BOX (OWNER ONLY) -->
+      <div class="bg-gradient-to-r from-amber-950/40 via-cardBg to-slate-900 border border-amber-500/40 p-4 sm:p-5 rounded-2xl space-y-2.5 shadow-lg">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="text-sm font-black text-amber-400 flex items-center gap-2">
+              <i class="fa-solid fa-dollar-sign"></i>
+              <span>سعر صرف الدولار السري (خاص بالإدارة فقط)</span>
+            </h3>
+            <p class="text-[11px] text-slate-300 mt-0.5">لا يظهر للزبائن نهائياً؛ عند تغييره تتحدث أسعار كل القطع المسعرة بالدولار تلقائياً بالليرة السورية.</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+            مخفي عن الزبائن
+          </span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2">
+          <div class="relative flex-1">
+            <input 
+              type="number" 
+              step="any" 
+              inputmode="decimal"
+              id="adminUsdRateInput" 
+              placeholder="سعر 1 دولار بالليرة السورية (مثلاً: 15000)" 
+              class="w-full bg-slate-950 border border-amber-500/40 rounded-xl px-3 py-2 text-xs text-amber-300 font-black focus:outline-none focus:border-amber-400"
+            />
+            <span class="absolute left-3 top-2 text-[11px] text-slate-400 font-bold">ل.س / $</span>
+          </div>
+          <button onclick="updateGlobalUsdRate()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs whitespace-nowrap flex items-center justify-center gap-1.5 shadow">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>تحديث كل الأسعار تلقائياً</span>
+          </button>
+        </div>
+      </div>
+
       <!-- CLOUD SYNC STATUS BOX -->
       <div class="bg-gradient-to-br from-slate-900 to-cardBg border border-neonGreen/40 p-4 sm:p-5 rounded-2xl space-y-3 shadow-lg">
         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
@@ -366,6 +400,7 @@
                 <th class="py-2.5 px-3">القطعة</th>
                 <th class="py-2.5 px-3">الشركة المصنعة</th>
                 <th class="py-2.5 px-3">الصنف</th>
+                <th class="py-2.5 px-3">السعر ($)</th>
                 <th class="py-2.5 px-3">السعر (ل.س)</th>
                 <th class="py-2.5 px-3 text-center">التوفر</th>
                 <th class="py-2.5 px-3 text-center">إجراءات</th>
@@ -525,7 +560,7 @@
     </div>
   </div>
 
-  <!-- ================= ADD / EDIT PRODUCT MODAL (CAMERA + BRAND + SYP) ================= -->
+  <!-- ================= ADD / EDIT PRODUCT MODAL (CAMERA + BRAND + USD/SYP) ================= -->
   <div id="productModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3">
     <div class="bg-cardBg border border-slate-700 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl">
       <div class="p-4 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
@@ -551,17 +586,23 @@
           </div>
         </div>
 
-        <!-- Category & Price SYP -->
-        <div class="grid grid-cols-2 gap-2.5">
+        <!-- Category & Prices (USD Auto-Calc + SYP) -->
+        <div class="space-y-2.5">
           <div>
             <label class="block text-slate-300 font-semibold mb-1">الصنف / القسم *</label>
             <select id="pCategory" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white">
               <!-- Populated dynamically from categories list -->
             </select>
           </div>
-          <div>
-            <label class="block text-neonGreen font-semibold mb-1">السعر بالليرة السورية (أي رقم) *</label>
-            <input type="number" step="any" inputmode="decimal" id="pPriceSYP" required placeholder="اكتب أي رقم (مثلاً 47250)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold">
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-amber-400 font-semibold mb-1">سعر القطعة بالدولار ($ اختياري)</label>
+              <input type="number" step="any" inputmode="decimal" id="pPriceUSD" oninput="autoCalcSYPFromUSD()" placeholder="مثلاً: 15.5" class="w-full bg-slate-900 border border-amber-500/40 rounded-xl px-3 py-2 text-amber-300 font-bold">
+            </div>
+            <div>
+              <label class="block text-neonGreen font-semibold mb-1">السعر النهائي للزبون (ل.س) *</label>
+              <input type="number" step="any" inputmode="decimal" id="pPriceSYP" oninput="document.getElementById('pPriceUSD').value=''" required placeholder="يحسب تلقائياً أو اكتب يدوياً" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold">
+            </div>
           </div>
         </div>
 
@@ -760,6 +801,7 @@
         brand: "Bison Power",
         category: "إنفرترات",
         priceSYP: 4850000,
+        priceUSD: null,
         inStock: true,
         image: "",
         icon: "fa-microchip",
@@ -775,6 +817,7 @@
         brand: "Felicity Solar",
         category: "بطاريات",
         priceSYP: 7200000,
+        priceUSD: null,
         inStock: true,
         image: "",
         icon: "fa-car-battery",
@@ -790,6 +833,7 @@
         brand: "Philips LED",
         category: "لمبات إنارة",
         priceSYP: 35000,
+        priceUSD: null,
         inStock: true,
         image: "",
         icon: "fa-lightbulb",
@@ -805,6 +849,7 @@
         brand: "Osram",
         category: "لمبات إنارة",
         priceSYP: 55000,
+        priceUSD: null,
         inStock: true,
         image: "",
         icon: "fa-lightbulb",
@@ -820,6 +865,7 @@
         brand: "كابلات دمشق",
         category: "وصلات وكابلات",
         priceSYP: 65000,
+        priceUSD: null,
         inStock: true,
         image: "",
         icon: "fa-plug",
@@ -835,6 +881,7 @@
         brand: "TOMZN",
         category: "قواطع وحماية",
         priceSYP: 440000,
+        priceUSD: null,
         inStock: true,
         image: "",
         icon: "fa-shield-halved",
@@ -850,6 +897,7 @@
         brand: "ورشة Techno E",
         category: "صيانة وتجهيز",
         priceSYP: 550000,
+        priceUSD: null,
         inStock: true,
         image: "",
         icon: "fa-screwdriver-wrench",
@@ -873,6 +921,7 @@
     let adminPin = localStorage.getItem('tekno_syp_pin') || "7788";
     let cart = JSON.parse(localStorage.getItem('tekno_syp_cart')) || [];
     let deliveryZones = JSON.parse(localStorage.getItem('tekno_syp_zones')) || DEFAULT_DELIVERY_ZONES;
+    let usdRate = parseFloat(localStorage.getItem('tekno_syp_usd_rate')) || 15000;
 
     let activeCategory = "all";
     let searchQuery = "";
@@ -924,6 +973,11 @@
           if (Array.isArray(data.deliveryZones)) deliveryZones = data.deliveryZones;
           if (data.shopPhone) shopPhone = data.shopPhone;
           if (data.adminPin) adminPin = data.adminPin;
+          if (data.usdRate) {
+            usdRate = parseFloat(data.usdRate) || usdRate;
+            const rateInput = document.getElementById('adminUsdRateInput');
+            if (rateInput) rateInput.value = usdRate;
+          }
 
           saveLocalOnly();
           renderAdminDeliveryZones();
@@ -954,6 +1008,7 @@
           deliveryZones,
           shopPhone,
           adminPin,
+          usdRate,
           updatedAt: Date.now()
         };
         const res = await fetch(`${cleanUrl}/techno_store_data.json`, {
@@ -990,6 +1045,7 @@
         localStorage.setItem('tekno_syp_pin', adminPin);
         localStorage.setItem('tekno_syp_cart', JSON.stringify(cart));
         localStorage.setItem('tekno_syp_zones', JSON.stringify(deliveryZones));
+        localStorage.setItem('tekno_syp_usd_rate', String(usdRate));
       } catch (e) {
         showToast("تنبيه: مساحة التخزين المحلية ممتلئة", "error");
       }
@@ -1002,11 +1058,62 @@
       }
     }
 
+    /* Secret USD Exchange Rate Logic */
+    function autoCalcSYPFromUSD() {
+      const usd = parseFloat(document.getElementById('pPriceUSD').value);
+      const rate = parseFloat(document.getElementById('adminUsdRateInput')?.value) || usdRate;
+      if (!isNaN(usd) && usd >= 0 && rate > 0) {
+        document.getElementById('pPriceSYP').value = Math.round(usd * rate);
+      }
+    }
+
+    function updateGlobalUsdRate() {
+      const newRate = parseFloat(document.getElementById('adminUsdRateInput').value);
+      if (isNaN(newRate) || newRate <= 0) {
+        showToast("يرجى إدخال سعر صرف صحيح للدولار", "error");
+        return;
+      }
+      usdRate = newRate;
+      let updatedCount = 0;
+      products.forEach(p => {
+        if (p.priceUSD !== null && p.priceUSD !== undefined && !isNaN(parseFloat(p.priceUSD))) {
+          p.priceSYP = Math.round(parseFloat(p.priceUSD) * usdRate);
+          updatedCount++;
+        }
+      });
+      saveStorage();
+      renderAdminTable();
+      renderStore();
+      showToast(`تم تحديث الصرف (${formatSYP(usdRate)}) وتعديل ${updatedCount} قطعة تلقائياً`, "success");
+    }
+
+    function quickUsdEdit(id, val) {
+      const usd = parseFloat(val);
+      const item = products.find(x => x.id === id);
+      if (!item) return;
+      if (val.trim() === "" || isNaN(usd)) {
+        item.priceUSD = null;
+        saveStorage();
+        showToast("تم إلغاء الربط بالدولار لهذه القطعة");
+        return;
+      }
+      if (usd >= 0) {
+        item.priceUSD = usd;
+        item.priceSYP = Math.round(usd * usdRate);
+        saveStorage();
+        renderAdminTable();
+        showToast(`تم تحديث السعر: ${usd}$ = ${formatSYP(item.priceSYP)}`, "success");
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('adminPhoneInput').value = shopPhone;
+      const rateInput = document.getElementById('adminUsdRateInput');
+      if (rateInput) rateInput.value = usdRate;
       if (firebaseDbUrl) {
         document.getElementById('firebaseUrlInput').value = firebaseDbUrl;
       }
+      history.replaceState({ overlay: 'home' }, "");
       renderAdminDeliveryZones();
       renderDeliverySelect();
       renderCategoryTabs();
@@ -1200,9 +1307,12 @@
               </div>
 
               <!-- Image Container -->
-              <div class="h-44 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 flex items-center justify-center relative overflow-hidden mb-3">
+              <div class="h-44 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 flex items-center justify-center relative overflow-hidden mb-3 group">
                 ${hasCustomImg ? `
-                  <img src="${prod.image}" alt="${prod.name}" onclick="openImageLightbox('${prod.id}')" title="اضغط لتكبير الصورة" class="w-full h-full object-contain p-1.5 rounded-2xl cursor-zoom-in hover:scale-105 transition-transform duration-200" />
+                  <img src="${prod.image}" alt="${prod.name}" onclick="openImageLightbox('${prod.id}')" title="اضغط لتكبير الصورة" class="w-full h-full object-contain p-1.5 rounded-2xl cursor-zoom-in group-hover:scale-105 transition-transform duration-200" />
+                  <button type="button" onclick="openImageLightbox('${prod.id}')" class="absolute top-2 right-2 w-7 h-7 rounded-lg bg-black/70 hover:bg-neonGreen hover:text-slate-950 text-white flex items-center justify-center text-xs transition-colors" title="تكبير الصورة">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                  </button>
                 ` : `
                   <i class="fa-solid ${prod.icon || 'fa-bolt'} text-4xl text-neonGreen"></i>
                 `}
@@ -1237,7 +1347,7 @@
               </div>
             </div>
 
-            <!-- Price (SYP ONLY) & Add Button -->
+            <!-- Price (SYP ONLY FOR CUSTOMERS) & Add Button -->
             <div class="pt-3 mt-3 border-t border-slate-800">
               <div class="flex items-center justify-between mb-2.5">
                 <div class="text-lg font-black text-neonGreen">
@@ -1298,13 +1408,20 @@
       renderCartDrawer();
       document.getElementById('cartBackdrop').classList.remove('hidden');
       document.getElementById('cartDrawer').classList.remove('-translate-x-full');
+      pushNavState('cart');
     }
 
-    function closeCart() {
-      document.getElementById('cartDrawer').classList.add('-translate-x-full');
-      setTimeout(() => {
-        document.getElementById('cartBackdrop').classList.add('hidden');
-      }, 250);
+    function closeCart(fromPop = false) {
+      const drawer = document.getElementById('cartDrawer');
+      if (!drawer.classList.contains('-translate-x-full')) {
+        drawer.classList.add('-translate-x-full');
+        setTimeout(() => {
+          document.getElementById('cartBackdrop').classList.add('hidden');
+        }, 250);
+        if (!fromPop && history.state && history.state.overlay === 'cart') {
+          history.back();
+        }
+      }
     }
 
     function changeCartQty(id, delta) {
@@ -1398,7 +1515,7 @@
       cart = [];
       saveLocalOnly();
       updateCartBadge();
-      closeCart();
+      closeCart(true);
       window.open(`https://wa.me/${shopPhone}?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
@@ -1461,18 +1578,25 @@
       document.getElementById('pinError').classList.add('hidden');
       document.getElementById('pinInput').value = "";
       document.getElementById('pinModal').classList.remove('hidden');
+      pushNavState('pin');
       setTimeout(() => document.getElementById('pinInput').focus(), 100);
     }
 
-    function closePinModal() {
-      document.getElementById('pinModal').classList.add('hidden');
+    function closePinModal(fromPop = false) {
+      const modal = document.getElementById('pinModal');
+      if (!modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        if (!fromPop && history.state && history.state.overlay === 'pin') {
+          history.back();
+        }
+      }
     }
 
     function confirmPin() {
       const val = document.getElementById('pinInput').value.trim();
       if (val === adminPin) {
         isAdminLoggedIn = true;
-        closePinModal();
+        closePinModal(true);
         switchView('admin');
         showToast("أهلاً بك في لوحة تحكم المحل", "success");
       } else {
@@ -1486,15 +1610,18 @@
       showToast("تم تسجيل الخروج والعودة لوضع الزبون");
     }
 
-    function switchView(view) {
+    function switchView(view, fromPop = false) {
       if (view === 'admin') {
         document.getElementById('storeView').classList.add('hidden');
         document.getElementById('adminView').classList.remove('hidden');
         document.getElementById('adminBtnText').textContent = "عرض المتجر";
         document.getElementById('adminLockIcon').className = "fa-solid fa-shop text-neonGreen";
+        const rateInput = document.getElementById('adminUsdRateInput');
+        if (rateInput) rateInput.value = usdRate;
         renderAdminDeliveryZones();
         renderAdminCategoriesList();
         renderAdminTable();
+        if (!fromPop) pushNavState('admin');
       } else {
         document.getElementById('storeView').classList.remove('hidden');
         document.getElementById('adminView').classList.add('hidden');
@@ -1561,6 +1688,7 @@
       const tbody = document.getElementById('adminTableBody');
       tbody.innerHTML = products.map(p => {
         const hasImg = p.image && p.image.trim().length > 0;
+        const usdVal = (p.priceUSD !== null && p.priceUSD !== undefined) ? p.priceUSD : "";
 
         return `
           <tr class="hover:bg-slate-900/60">
@@ -1572,6 +1700,20 @@
             </td>
             <td class="py-2.5 px-3 text-amber-300 font-semibold">${p.brand || '-'}</td>
             <td class="py-2.5 px-3 text-slate-300">${p.category}</td>
+            <td class="py-2.5 px-3">
+              <div class="flex items-center gap-1">
+                <input 
+                  type="number" 
+                  step="any" 
+                  inputmode="decimal"
+                  value="${usdVal}" 
+                  placeholder="-"
+                  onchange="quickUsdEdit('${p.id}', this.value)" 
+                  class="w-20 bg-slate-900 border border-amber-500/40 rounded-lg px-2 py-1 text-xs text-amber-300 font-bold"
+                />
+                <span class="text-[10px] text-amber-400">$</span>
+              </div>
+            </td>
             <td class="py-2.5 px-3">
               <div class="flex items-center gap-1">
                 <input 
@@ -1610,7 +1752,9 @@
         const item = products.find(x => x.id === id);
         if (item) {
           item.priceSYP = p;
+          item.priceUSD = null;
           saveStorage();
+          renderAdminTable();
           showToast(`تم تعديل السعر إلى ${formatSYP(p)}`, "success");
         }
       }
@@ -1728,6 +1872,7 @@
       document.getElementById('pName').value = "";
       document.getElementById('pBrand').value = "";
       populateCategorySelect(categories[0] || "إنفرترات");
+      document.getElementById('pPriceUSD').value = "";
       document.getElementById('pPriceSYP').value = "";
       document.getElementById('pVoltage').value = "";
       document.getElementById('pPower').value = "";
@@ -1738,6 +1883,7 @@
       document.getElementById('pDesc').value = "";
       setImagePreview("");
       document.getElementById('productModal').classList.remove('hidden');
+      pushNavState('product');
     }
 
     function editProductModal(id) {
@@ -1748,6 +1894,7 @@
       document.getElementById('pName').value = p.name;
       document.getElementById('pBrand').value = p.brand || "";
       populateCategorySelect(p.category);
+      document.getElementById('pPriceUSD').value = (p.priceUSD !== null && p.priceUSD !== undefined) ? p.priceUSD : "";
       document.getElementById('pPriceSYP').value = p.priceSYP;
       document.getElementById('pVoltage').value = p.voltage || "";
       document.getElementById('pPower').value = p.power || "";
@@ -1758,10 +1905,17 @@
       document.getElementById('pDesc').value = p.description || "";
       setImagePreview(p.image || "");
       document.getElementById('productModal').classList.remove('hidden');
+      pushNavState('product');
     }
 
-    function closeProductModal() {
-      document.getElementById('productModal').classList.add('hidden');
+    function closeProductModal(fromPop = false) {
+      const modal = document.getElementById('productModal');
+      if (!modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        if (!fromPop && history.state && history.state.overlay === 'product') {
+          history.back();
+        }
+      }
     }
 
     function handleProductSubmit(e) {
@@ -1770,6 +1924,8 @@
       const name = document.getElementById('pName').value.trim();
       const brand = document.getElementById('pBrand').value.trim();
       const category = document.getElementById('pCategory').value;
+      const rawUsd = parseFloat(document.getElementById('pPriceUSD').value);
+      const priceUSD = isNaN(rawUsd) ? null : rawUsd;
       const priceSYP = parseFloat(document.getElementById('pPriceSYP').value);
       const voltage = document.getElementById('pVoltage').value.trim();
       const power = document.getElementById('pPower').value.trim();
@@ -1785,19 +1941,19 @@
       if (id) {
         const idx = products.findIndex(x => x.id === id);
         if (idx !== -1) {
-          products[idx] = { ...products[idx], name, brand, category, priceSYP, voltage, power, charger, warranty, inStock, icon, description, image };
+          products[idx] = { ...products[idx], name, brand, category, priceUSD, priceSYP, voltage, power, charger, warranty, inStock, icon, description, image };
           showToast("تم تحديث بيانات القطعة والصورة", "success");
         }
       } else {
         products.unshift({
           id: "p_" + Date.now(),
-          name, brand, category, priceSYP, voltage, power, charger, warranty, inStock, icon, description, image
+          name, brand, category, priceUSD, priceSYP, voltage, power, charger, warranty, inStock, icon, description, image
         });
         showToast("تمت إضافة القطعة بنجاح", "success");
       }
 
       saveStorage();
-      closeProductModal();
+      closeProductModal(true);
       renderAdminTable();
       renderCategoryTabs();
     }
@@ -1805,9 +1961,16 @@
     function openCalcModal() {
       calcSystem();
       document.getElementById('calcModal').classList.remove('hidden');
+      pushNavState('calc');
     }
-    function closeCalcModal() {
-      document.getElementById('calcModal').classList.add('hidden');
+    function closeCalcModal(fromPop = false) {
+      const modal = document.getElementById('calcModal');
+      if (!modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        if (!fromPop && history.state && history.state.overlay === 'calc') {
+          history.back();
+        }
+      }
     }
 
     function calcSystem() {
@@ -1841,7 +2004,7 @@
       text += `🔹 *الإنفرتر المقترح:* ${inv}\n`;
       text += `🔹 *البطاريات المقترحة:* ${bat}\n`;
       text += `أرجو تزويدي بالأسعار المتوفرة عندكم في فرع المزة بالليرة السورية.`;
-      closeCalcModal();
+      closeCalcModal(true);
       window.open(`https://wa.me/${shopPhone}?text=${encodeURIComponent(text)}`, '_blank');
     }
 
@@ -1849,9 +2012,16 @@
 
     function openMaintModal() {
       document.getElementById('maintModal').classList.remove('hidden');
+      pushNavState('maint');
     }
-    function closeMaintModal() {
-      document.getElementById('maintModal').classList.add('hidden');
+    function closeMaintModal(fromPop = false) {
+      const modal = document.getElementById('maintModal');
+      if (!modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        if (!fromPop && history.state && history.state.overlay === 'maint') {
+          history.back();
+        }
+      }
     }
 
     function handleMaintImageUpload(event) {
@@ -1916,9 +2086,69 @@
       text += `👤 *العميل:* ${client}\n`;
       text += `📍 *الفرع:* مزة جبل - بناء 27\n`;
 
-      closeMaintModal();
+      closeMaintModal(true);
       window.open(`https://wa.me/${shopPhone}?text=${encodeURIComponent(text)}`, '_blank');
     }
+
+    /* Image Lightbox Zoom */
+    function openImageLightbox(prodId) {
+      const prod = products.find(p => p.id === prodId);
+      if (!prod || !prod.image) return;
+      document.getElementById('lightboxImg').src = prod.image;
+      document.getElementById('lightboxTitle').textContent = prod.name;
+      document.getElementById('imageLightboxModal').classList.remove('hidden');
+      pushNavState('lightbox');
+    }
+
+    function closeImageLightbox(fromPop = false) {
+      const modal = document.getElementById('imageLightboxModal');
+      if (modal && !modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        document.getElementById('lightboxImg').src = "";
+        if (!fromPop && history.state && history.state.overlay === 'lightbox') {
+          history.back();
+        }
+      }
+    }
+
+    /* Browser / Mobile Back Button Navigation Handler */
+    function pushNavState(name) {
+      if (!history.state || history.state.overlay !== name) {
+        history.pushState({ overlay: name }, "");
+      }
+    }
+
+    window.addEventListener('popstate', () => {
+      if (!document.getElementById('imageLightboxModal').classList.contains('hidden')) {
+        closeImageLightbox(true);
+        return;
+      }
+      if (!document.getElementById('productModal').classList.contains('hidden')) {
+        closeProductModal(true);
+        return;
+      }
+      if (!document.getElementById('cartDrawer').classList.contains('-translate-x-full')) {
+        closeCart(true);
+        return;
+      }
+      if (!document.getElementById('calcModal').classList.contains('hidden')) {
+        closeCalcModal(true);
+        return;
+      }
+      if (!document.getElementById('maintModal').classList.contains('hidden')) {
+        closeMaintModal(true);
+        return;
+      }
+      if (!document.getElementById('pinModal').classList.contains('hidden')) {
+        closePinModal(true);
+        return;
+      }
+      if (!document.getElementById('adminView').classList.contains('hidden')) {
+        switchView('store', true);
+        return;
+      }
+      history.pushState({ overlay: 'home' }, "");
+    });
 
     /* Toast Helper */
     let toastTimer;
@@ -1948,20 +2178,6 @@
         box.classList.remove('translate-y-0', 'opacity-100');
         box.classList.add('translate-y-28', 'opacity-0');
       }, 3000);
-    }
-
-    /* Image Lightbox Zoom */
-    function openImageLightbox(prodId) {
-      const prod = products.find(p => p.id === prodId);
-      if (!prod || !prod.image) return;
-      document.getElementById('lightboxImg').src = prod.image;
-      document.getElementById('lightboxTitle').textContent = prod.name;
-      document.getElementById('imageLightboxModal').classList.remove('hidden');
-    }
-
-    function closeImageLightbox() {
-      document.getElementById('imageLightboxModal').classList.add('hidden');
-      document.getElementById('lightboxImg').src = "";
     }
   </script>
 </body>
