@@ -713,6 +713,21 @@
 
   </div>
 
+  <!-- ================= IMAGE LIGHTBOX MODAL ================= -->
+  <div id="imageLightboxModal" onclick="closeImageLightbox()" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4 cursor-zoom-out">
+    <div onclick="event.stopPropagation()" class="relative max-w-3xl w-full bg-cardBg border border-slate-700 rounded-3xl p-3 sm:p-4 shadow-2xl space-y-3 cursor-default">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+        <h4 id="lightboxTitle" class="text-xs sm:text-sm font-black text-white truncate pl-2">معاينة الصورة</h4>
+        <button onclick="closeImageLightbox()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-red-500/20 text-slate-300 hover:text-red-400 flex items-center justify-center text-sm transition-colors">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="bg-slate-950 rounded-2xl border border-slate-800 flex items-center justify-center overflow-hidden max-h-[75vh]">
+        <img id="lightboxImg" src="" alt="تكبير الصورة" class="max-w-full max-h-[75vh] object-contain" />
+      </div>
+    </div>
+  </div>
+
   <!-- ================= FOOTER ================= -->
   <footer class="bg-slate-950 border-t border-slate-800/80 py-6 text-xs text-slate-400 mt-10">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -1187,7 +1202,7 @@
               <!-- Image Container -->
               <div class="h-44 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 flex items-center justify-center relative overflow-hidden mb-3">
                 ${hasCustomImg ? `
-                  <img src="${prod.image}" alt="${prod.name}" class="w-full h-full object-contain p-1.5 rounded-2xl" />
+                  <img src="${prod.image}" alt="${prod.name}" onclick="openImageLightbox('${prod.id}')" title="اضغط لتكبير الصورة" class="w-full h-full object-contain p-1.5 rounded-2xl cursor-zoom-in hover:scale-105 transition-transform duration-200" />
                 ` : `
                   <i class="fa-solid ${prod.icon || 'fa-bolt'} text-4xl text-neonGreen"></i>
                 `}
@@ -1933,6 +1948,20 @@
         box.classList.remove('translate-y-0', 'opacity-100');
         box.classList.add('translate-y-28', 'opacity-0');
       }, 3000);
+    }
+
+    /* Image Lightbox Zoom */
+    function openImageLightbox(prodId) {
+      const prod = products.find(p => p.id === prodId);
+      if (!prod || !prod.image) return;
+      document.getElementById('lightboxImg').src = prod.image;
+      document.getElementById('lightboxTitle').textContent = prod.name;
+      document.getElementById('imageLightboxModal').classList.remove('hidden');
+    }
+
+    function closeImageLightbox() {
+      document.getElementById('imageLightboxModal').classList.add('hidden');
+      document.getElementById('lightboxImg').src = "";
     }
   </script>
 </body>
